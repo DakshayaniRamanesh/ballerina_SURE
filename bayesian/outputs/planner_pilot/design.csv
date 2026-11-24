@@ -1,0 +1,15 @@
+case,mode,keyed,cap,deadline
+0,normal,False,200,500
+1,normal,True,100,750
+2,slow,False,150,750
+3,status_down,True,150,750
+4,drop,False,150,750
+5,status_slow,True,100,500
+6,slow,True,200,750
+7,lost,True,100,500
+8,primary_down,True,100,500
+9,lost,False,200,1000
+10,drop,True,200,500
+11,primary_down,False,200,750
+12,status_slow,False,100,1000
+13,status_down,False,200,1000

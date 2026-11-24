@@ -1,0 +1,45 @@
+{
+  "train_samples": 405,
+  "validation_samples": 201,
+  "test_evaluated": false,
+  "duration_bin_ms": 25,
+  "collection_http_cap_ms": 180,
+  "collection_wait_target_ms": 75,
+  "minimum_training_cell_count": 4,
+  "eligible_cells": 18,
+  "oracle_state_diagnostic": {
+    "samples": 201,
+    "next_state_accuracy": 0.9950248756218906,
+    "observation_accuracy": 0.8756218905472637,
+    "next_state_log_loss_clipped": 0.016485649737469712,
+    "observation_log_loss_clipped": 0.21325202979742963,
+    "joint_log_loss_clipped": 1.2703924573858407,
+    "unseen_joint_outcomes": 3,
+    "unseen_observations": 0,
+    "unseen_next_states": 0,
+    "next_state_brier": 0.01012239838867944,
+    "confirmation_brier": 0.04486219421921535,
+    "duration_mae_ms": 28.84637271160537
+  },
+  "b3_belief_prediction": {
+    "samples": 201,
+    "next_state_accuracy": 0.7014925373134329,
+    "observation_accuracy": 0.7014925373134329,
+    "next_state_log_loss_clipped": 0.7576411295663887,
+    "observation_log_loss_clipped": 0.6588311096515682,
+    "joint_log_loss_clipped": 2.0351342898521723,
+    "unseen_joint_outcomes": 3,
+    "unseen_observations": 0,
+    "unseen_next_states": 0,
+    "next_state_brier": 0.4414761937504992,
+    "confirmation_brier": 0.09741067983222206,
+    "duration_mae_ms": 31.507918197243367
+  },
+  "limitations": [
+    "One-step empirical joint probabilities; no smoothing of unseen outcomes.",
+    "Oracle diagnostic uses true state only for offline assessment, never for runtime inference.",
+    "Collection used fixed action timeout and wait target; outcomes at shorter remaining deadlines are not validated.",
+    "Multi-step history, latent fault dependence, and action-censoring effects are not established.",
+    "Log losses are clipped at 1e-15; zero-probability counts are reported separately."
+  ]
+}

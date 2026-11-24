@@ -1,0 +1,39 @@
+{
+  "states": [
+    "unstarted",
+    "processing",
+    "completed"
+  ],
+  "runtime_inputs_available": [
+    "elapsed_ms",
+    "error",
+    "keyed",
+    "initial_timeout_ms"
+  ],
+  "actual_conditioning_features": [
+    "error",
+    "keyed",
+    "initial_timeout_ms"
+  ],
+  "elapsed_ms_used": false,
+  "smoothing_alpha": 1,
+  "boundary_screen_ms": 2,
+  "quarantined_recovery_samples": 54,
+  "train_samples": 405,
+  "validation_samples": 201,
+  "test_evaluated": false,
+  "global_prior_validation": {
+    "accuracy": 0.5373134328358209,
+    "balanced_accuracy": 0.3333333333333333,
+    "macro_f1": 0.23300970873786409,
+    "log_loss": 0.9992548477461783,
+    "multiclass_brier": 0.5988585403432662
+  },
+  "B3_conditional_validation": {
+    "accuracy": 0.6865671641791045,
+    "balanced_accuracy": 0.5087719298245613,
+    "macro_f1": 0.4879495736002966,
+    "log_loss": 0.7957117105164809,
+    "multiclass_brier": 0.456669673973303
+  }
+}
