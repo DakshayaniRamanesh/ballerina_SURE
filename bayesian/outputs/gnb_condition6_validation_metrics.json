@@ -1,0 +1,11 @@
+{
+  "accuracy": 0.6133333333333333,
+  "balanced_accuracy": 0.7911111111111112,
+  "macro_f1": 0.6529565011361127,
+  "log_loss": 9.195588200845929,
+  "multiclass_brier": 0.7416564165962327,
+  "train_cases": 75,
+  "evaluation_cases": 25,
+  "train_windows": 450,
+  "evaluation_windows": 150
+}

@@ -1,0 +1,7 @@
+,cpu,delay,disk,loss,mem,normal
+cpu,12,0,0,0,3,0
+delay,0,11,0,4,0,0
+disk,0,0,15,0,0,0
+loss,0,0,0,13,0,2
+mem,0,0,0,0,15,0
+normal,8,11,14,16,0,26

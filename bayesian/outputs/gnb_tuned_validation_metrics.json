@@ -1,0 +1,28 @@
+{
+  "selected_on_training_cv": {
+    "prior": "empirical",
+    "var_smoothing": 0.1,
+    "temperature": 20.0
+  },
+  "baseline_validation": {
+    "accuracy": 0.6133333333333333,
+    "balanced_accuracy": 0.7911111111111112,
+    "macro_f1": 0.6529565011361127,
+    "log_loss": 9.195588200845929,
+    "multiclass_brier": 0.7416564165962327,
+    "nominal_false_alarm_rate": 0.6533333333333333,
+    "fault_detection_recall": 0.9733333333333334
+  },
+  "tuned_validation": {
+    "accuracy": 0.6533333333333333,
+    "balanced_accuracy": 0.8399999999999999,
+    "macro_f1": 0.7052819656841848,
+    "log_loss": 0.8338801696751456,
+    "multiclass_brier": 0.4710904787236916,
+    "nominal_false_alarm_rate": 0.6266666666666667,
+    "fault_detection_recall": 1.0
+  },
+  "train_cases": 75,
+  "validation_cases": 25,
+  "test_evaluated": false
+}
