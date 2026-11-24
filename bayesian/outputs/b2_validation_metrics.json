@@ -1,0 +1,52 @@
+{
+  "transition_parameters": {
+    "onset": 0.02,
+    "recovery": 0.02,
+    "strength": 0.25
+  },
+  "training_oof_recall_target": 0.9,
+  "static_threshold": 0.7275334695798616,
+  "temporal_threshold": 0.7474546255239709,
+  "training_cases": 75,
+  "validation_cases": 25,
+  "validation_results": {
+    "B1.1_argmax": {
+      "accuracy": 0.6533333333333333,
+      "balanced_accuracy": 0.8399999999999999,
+      "macro_f1": 0.7052819656841848,
+      "log_loss": 0.8338801696751456,
+      "multiclass_brier": 0.4710904787236916,
+      "nominal_false_alarm_rate": 0.6266666666666667,
+      "fault_detection_recall": 1.0
+    },
+    "B1.1_threshold": {
+      "accuracy": 0.7266666666666667,
+      "balanced_accuracy": 0.8022222222222223,
+      "macro_f1": 0.7586805555555557,
+      "log_loss": 0.8338801696751456,
+      "multiclass_brier": 0.4710904787236916,
+      "nominal_false_alarm_rate": 0.38666666666666666,
+      "fault_detection_recall": 0.9066666666666666
+    },
+    "B2_argmax": {
+      "accuracy": 0.9133333333333333,
+      "balanced_accuracy": 0.9444444444444443,
+      "macro_f1": 0.9099967661088205,
+      "log_loss": 0.6180753520384719,
+      "multiclass_brier": 0.3164903121756136,
+      "nominal_false_alarm_rate": 0.13333333333333333,
+      "fault_detection_recall": 1.0
+    },
+    "B2_threshold": {
+      "accuracy": 0.9333333333333333,
+      "balanced_accuracy": 0.9066666666666667,
+      "macro_f1": 0.9198822963528844,
+      "log_loss": 0.6180753520384719,
+      "multiclass_brier": 0.3164903121756136,
+      "nominal_false_alarm_rate": 0.02666666666666667,
+      "fault_detection_recall": 0.92
+    }
+  },
+  "test_evaluated": false,
+  "limitations": "Approximate likelihood ratios and assumed transition family; injection-relative offsets used only for elapsed time and ordering. Training OOF is for tuning, not an independent estimate."
+}
