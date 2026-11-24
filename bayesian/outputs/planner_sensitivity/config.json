@@ -1,0 +1,81 @@
+{
+  "n": 42,
+  "seed": 4142,
+  "base": "http://127.0.0.1:9090",
+  "b3": "bayesian/outputs/b3/bayesian_b3.joblib",
+  "kernel": "bayesian/outputs/b41/kernel_tables.json",
+  "out": "bayesian/outputs/planner_sensitivity",
+  "specs": {
+    "safe_retry": null,
+    "fixed_reconcile": null,
+    "retry_backoff": null,
+    "reconcile_backoff": null,
+    "failover_backoff": null,
+    "hybrid_backoff": null,
+    "d1_t0.00_l2": [
+      1,
+      0.0,
+      2
+    ],
+    "d1_t0.10_l2": [
+      1,
+      0.1,
+      2
+    ],
+    "d1_t0.20_l2": [
+      1,
+      0.2,
+      2
+    ],
+    "d2_t0.00_l2": [
+      2,
+      0.0,
+      2
+    ],
+    "d2_t0.10_l2": [
+      2,
+      0.1,
+      2
+    ],
+    "d2_t0.20_l2": [
+      2,
+      0.2,
+      2
+    ],
+    "d3_t0.00_l2": [
+      3,
+      0.0,
+      2
+    ],
+    "d3_t0.10_l2": [
+      3,
+      0.1,
+      2
+    ],
+    "d3_t0.20_l2": [
+      3,
+      0.2,
+      2
+    ],
+    "d2_t0.10_l0": [
+      2,
+      0.1,
+      0
+    ],
+    "d2_t0.10_l1": [
+      2,
+      0.1,
+      1
+    ]
+  },
+  "max_steps": 4,
+  "call_budget": 3,
+  "wait_ms": 75,
+  "http_cap": 180,
+  "admission_margin": 25,
+  "call_cost": 0.025,
+  "model_sha256": {
+    "b3": "348174d885c1cf679687eff034c6942394651eef30f7b6466d2a0446ec18d3d8",
+    "kernel": "c71c371befcbfff09c751d8bdee65382b028cb594475f38006f517306367a3ad"
+  }
+}

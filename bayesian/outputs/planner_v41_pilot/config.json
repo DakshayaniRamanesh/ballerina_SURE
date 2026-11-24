@@ -1,0 +1,25 @@
+{
+  "n": 14,
+  "seed": 4141,
+  "base": "http://127.0.0.1:9090",
+  "b3": "bayesian/outputs/b3/bayesian_b3.joblib",
+  "kernel": "bayesian/outputs/b41/kernel_tables.json",
+  "out": "bayesian/outputs/planner_v41_pilot",
+  "time_cost": 0.1,
+  "selected_level": 2,
+  "call_cost": 0.025,
+  "wait_ms": 75,
+  "http_cap": 180,
+  "max_steps": 4,
+  "call_budget": 3,
+  "admission_margin": 25,
+  "policies": [
+    "safe_retry",
+    "fixed_reconcile",
+    "retry_backoff",
+    "reconcile_backoff",
+    "v2.1",
+    "v4.1_no_time_context",
+    "v4.1"
+  ]
+}

@@ -1,0 +1,17 @@
+reference,comparator,wins,losses,ties
+d2_t0.10_l2,safe_retry,10,0,32
+d2_t0.10_l2,fixed_reconcile,14,0,28
+d2_t0.10_l2,retry_backoff,8,0,34
+d2_t0.10_l2,reconcile_backoff,12,0,30
+d2_t0.10_l2,failover_backoff,0,0,42
+d2_t0.10_l2,hybrid_backoff,1,0,41
+d2_t0.10_l2,d1_t0.00_l2,2,0,40
+d2_t0.10_l2,d1_t0.10_l2,2,0,40
+d2_t0.10_l2,d1_t0.20_l2,2,0,40
+d2_t0.10_l2,d2_t0.00_l2,0,0,42
+d2_t0.10_l2,d2_t0.20_l2,0,0,42
+d2_t0.10_l2,d3_t0.00_l2,0,0,42
+d2_t0.10_l2,d3_t0.10_l2,0,0,42
+d2_t0.10_l2,d3_t0.20_l2,1,0,41
+d2_t0.10_l2,d2_t0.10_l0,2,0,40
+d2_t0.10_l2,d2_t0.10_l1,0,0,42
