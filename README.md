@@ -2,801 +2,885 @@
 
 ## Project Overview
 
-SURE is a research-oriented adaptive fault-recovery framework for distributed systems, with Ballerina as the target integration environment.
+SURE is a research-oriented fault recovery framework for distributed systems that combines probabilistic execution-state estimation, sequential belief updating, semantic safety constraints and resource-aware recovery planning.
 
-The project investigates how probabilistic execution-state estimation, sequential belief updating, semantic safety constraints and bounded lookahead planning can improve recovery decisions when the outcome of a distributed request is uncertain.
+The framework addresses ambiguous request failures, where a client cannot determine whether an operation has failed, is still processing or has already completed.
 
-Unlike conventional recovery mechanisms that rely on predefined retry and backoff strategies, SURE dynamically evaluates possible recovery actions based on observed failures, estimated execution states, elapsed time, remaining deadlines and available recovery resources.
+Rather than relying exclusively on predefined retry and backoff mechanisms, SURE evaluates possible recovery actions using probabilistic execution-state beliefs, observed responses, elapsed time, remaining deadlines and available recovery resources.
 
-The current implementation consists of a Ballerina experimental service and a Python-based probabilistic recovery engine.
+The project targets integration with the Ballerina programming language.
 
-**Current status:** Advanced research prototype — Bayesian implementation and development experiments completed; Random Forest integration and independent evaluation pending.
+**Current Status:** Bayesian recovery prototype implemented, independently evaluated, packaged and integration tested. Random Forest integration and native Ballerina runtime implementation are pending.
 
 ---
 
 ## 1. Problem Statement
 
-In distributed systems, a communication failure does not necessarily indicate that the requested operation failed.
+A communication failure in a distributed system does not necessarily indicate that the requested operation has failed.
 
-When a client experiences a timeout, the operation may be:
+Following a timeout or communication error, an operation may be:
 
-- **Unstarted:** The request has not begun execution.
-- **Processing:** The request is currently being executed.
-- **Completed:** The operation has completed, but the client has not received confirmation.
+- **Unstarted:** The operation has not begun execution.
+- **Processing:** The operation is currently being executed.
+- **Completed:** The operation has completed, but confirmation has not reached the client.
 
-Conventional retry mechanisms may introduce duplicate execution, unnecessary waiting, excessive network traffic or unresolved operations.
+Conventional recovery mechanisms may introduce:
 
-SURE addresses this problem by maintaining a probabilistic representation of the underlying execution state and selecting appropriate recovery actions while respecting semantic safety and resource constraints.
+- Duplicate execution effects.
+- Unnecessary recovery requests.
+- Excessive waiting.
+- Premature exhaustion of recovery resources.
+- Increased recovery latency.
+- Unresolved execution outcomes.
+
+SURE investigates whether uncertainty-aware recovery planning can improve recovery effectiveness and resource utilization without violating operation semantics.
+
+---
 
 ## 2. Research Objectives
 
 - Estimate hidden execution states using observable client-side information.
 - Investigate Bayesian and Random Forest probability estimators.
-- Update execution-state beliefs sequentially using recovery observations.
-- Model execution-state transitions and recovery-action outcomes.
-- Incorporate elapsed time and recovery history into transition modelling.
-- Enforce operation-specific semantic safety constraints.
-- Optimize recovery decisions under deadline and network-call constraints.
+- Maintain execution-state beliefs throughout recovery.
+- Model recovery-action outcomes and execution-state transitions.
+- Incorporate elapsed time and recovery history into decision-making.
+- Enforce mandatory semantic safety constraints.
+- Optimize recovery under deadline and network-call restrictions.
 - Compare greedy and bounded lookahead recovery strategies.
-- Evaluate recovery effectiveness against conventional recovery baselines.
-- Investigate the trade-offs between recovery success, latency, network usage and computational overhead.
-- Integrate the resulting recovery framework into Ballerina.
+- Evaluate performance against conventional recovery mechanisms.
+- Investigate performance under diverse and previously unseen fault conditions.
+- Develop a reusable recovery framework targeting Ballerina.
 
 ---
 
 ## 3. System Architecture
 
-The current recovery workflow is:
+```mermaid
+flowchart TD
+    A[Distributed Request] --> B{Confirmed?}
+    B -->|Yes| C[Successful Completion]
+    B -->|No| D[Initial Execution-State Estimator]
 
-1. A Ballerina service receives a request.
-2. The client encounters an ambiguous failure or timeout.
-3. The execution-state estimator calculates the initial probability distribution.
-4. The semantic safety layer determines permissible recovery actions.
-5. The transition model predicts possible action outcomes, execution states and durations.
-6. The recovery planner evaluates the expected utility of permissible actions.
-7. The selected action is executed.
-8. The execution-state belief is updated using the observed response.
-9. Recovery continues until confirmation, resource exhaustion, deadline termination or an explicit stop decision.
+    E[Bayesian Estimator] --> D
+    F[Random Forest Estimator - Pending] --> D
+
+    D --> G[Execution-State Belief]
+    G --> H[Time-Aware Transition Model]
+    H --> I[Recovery Planner]
+
+    J[Semantic Safety Constraints] --> I
+    K[Deadline and Call Budget] --> I
+
+    I --> L[Recovery Action]
+    L --> M[Observed Response]
+    M --> N{Confirmed?}
+
+    N -->|Yes| C
+    N -->|No| O[Sequential Belief Update]
+    O --> P{Recovery Continues?}
+
+    P -->|Yes| G
+    P -->|No| Q[Unresolved / Stop]
+```
 
 ### Core Components
 
-| Component | Function | Status |
+| Component | Description | Status |
 |---|---|---|
-| Ballerina testbed | Simulates distributed request failures | Implemented |
-| Bayesian fault estimator | Estimates telemetry-based fault categories | Implemented |
-| Temporal Bayesian filter | Updates fault probabilities over time | Implemented |
-| Bayesian execution estimator | Estimates hidden request execution states | Implemented |
-| Random Forest estimator | Alternative execution-state probability estimator | Integration pending |
-| Transition model | Predicts recovery-action outcomes | Implemented |
-| Sequential belief updater | Updates probabilities after recovery observations | Implemented |
-| Semantic safety layer | Prevents inadmissible recovery actions | Implemented |
-| Greedy planner | Selects actions using immediate expected utility | Implemented |
-| Lookahead planner | Evaluates possible future recovery sequences | Implemented |
-| Native Ballerina library | Reusable recovery framework | Pending |
+| Ballerina experimental service | Controlled distributed failure simulation | Complete |
+| Bayesian fault estimator | Telemetry-based fault classification | Complete |
+| Temporal Bayesian filter | Sequential fault probability estimation | Complete |
+| Bayesian execution estimator | Initial request-level state probabilities | Complete |
+| Random Forest estimator | Alternative initial probability estimator | Pending integration |
+| Transition model | State, observation and duration prediction | Complete |
+| Sequential belief updater | Updates execution-state probabilities | Complete |
+| Semantic safety layer | Prevents inadmissible recovery actions | Complete |
+| Greedy planner | Immediate expected-utility optimization | Complete |
+| Lookahead planner | Bounded sequential recovery planning | Complete |
+| Reusable Python recovery engine | Shared estimator and planning interface | Complete |
+| Native Ballerina runtime | Native reusable recovery library | Pending |
 
 ---
 
-## 4. Ballerina Experimental Environment
+## 4. Experimental Environment
 
-A controlled Ballerina service was implemented to simulate different distributed-system failure conditions.
+Two Ballerina experimental services are available.
 
-| Failure Mode | Description |
-|---|---|
-| `normal` | Successful normal execution |
-| `lost` | Operation completes but the response is lost |
-| `drop` | Request is dropped before execution |
-| `slow` | Operation requires additional processing time |
-| `status_slow` | Status service responds slowly |
-| `status_down` | Status service is unavailable |
-| `primary_down` | Primary execution endpoint is unavailable |
+| Environment | Port | Purpose |
+|---|---:|---|
+| Original development service | 9090 | Initial model development and dataset collection |
+| Extended evaluation service | 9091 | Independent recovery and robustness evaluation |
 
-The environment supports operations with and without deduplication protection.
+### Original Failure Conditions
 
-An independent server-side ledger records execution start times, completion times, execution attempts and actual execution effects.
+- Normal execution.
+- Lost response after execution.
+- Dropped request.
+- Slow execution.
+- Slow status service.
+- Unavailable status service.
+- Unavailable primary endpoint.
 
-These records provide ground-truth labels for model training and experimental verification. Privileged server-side execution information is not supplied directly to the runtime recovery estimator.
+### Extended Evaluation Environment
+
+The extended service introduces:
+
+- Variable processing delays.
+- Simulated network delays and jitter.
+- Intermittent primary and backup endpoint failures.
+- Intermittent status-service failures.
+- Request drops.
+- Delayed responses.
+- Combined failure conditions.
+- Multiple initial timeout values.
+- Multiple end-to-end deadlines.
+- Different recovery-call budgets.
+- Keyed and unkeyed operations.
+
+An independent execution ledger records execution attempts, execution effects and server-side execution information.
+
+Ground-truth ledger information is used for training labels and experimental verification, not as privileged input to the runtime recovery estimator.
+
+The environment is a controlled single-process synthetic testbed rather than a production distributed deployment.
 
 ---
 
-## 5. Bayesian Fault Estimation Using RCAEval
+## 5. Bayesian Development
 
-### B1 — Gaussian Naive Bayes
+### B1 — Bayesian Fault Estimation
 
-The initial Bayesian fault-estimation experiments were conducted using the RCAEval dataset.
+Initial fault classification experiments were conducted using the RCAEval dataset.
 
-The selected dataset contains 125 experimental cases covering:
+The selected data contains 125 experimental cases covering CPU, memory, network delay, packet loss and disk faults, together with nominal observations.
 
-- CPU faults
-- Memory faults
-- Network delay
-- Network packet loss
-- Disk faults
-- Nominal operation observations
+#### Dataset Preparation
 
-### Dataset Preparation
-
-The raw telemetry dataset was audited for missing values, inconsistent feature availability, timestamp validity and differences in experimental observation lengths.
-
-Common CPU and memory metrics were extracted and converted into statistical observation windows.
-
-| Dataset Property | Value |
+| Property | Value |
 |---|---:|
 | Experimental cases | 125 |
-| Raw telemetry rows | 262,603 |
-| Observation windows | 750 |
-| Features per window | 48 |
+| Raw telemetry observations | 262,603 |
+| Prepared observation windows | 750 |
+| Features per observation window | 48 |
 | Training cases | 75 |
 | Validation cases | 25 |
 | Reserved test cases | 25 |
 
-Complete experimental cases were assigned to individual partitions to prevent leakage between observation windows from the same experiment.
+Gaussian Naive Bayes was implemented using common CPU and memory telemetry features.
 
-### B1.1 — Bayesian Model Tuning
+Complete experimental cases were assigned to individual partitions to prevent leakage between observation windows belonging to the same case.
 
-Gaussian Naive Bayes was improved through:
+### B1.1 — Bayesian Model Optimization
 
-- Variance-smoothing parameter tuning.
+The initial Bayesian classifier was improved using:
+
+- Variance-smoothing optimization.
 - Class-prior investigation.
-- Probability calibration using temperature scaling.
+- Temperature-based probability calibration.
 - Fault-detection threshold selection.
-- Evaluation of probability quality and nominal false alarms.
+- Probability-quality evaluation.
 
 ### B2 — Temporal Bayesian Filtering
 
-The original classifier processed observation windows independently, resulting in a high nominal false-alarm rate.
-
 Temporal Bayesian filtering was introduced to incorporate previous fault beliefs when interpreting new telemetry observations.
 
-### Fault-Estimation Validation Results
+This substantially reduced false alarms compared with independent classification of observation windows.
 
-| Model | Validation Accuracy |
-|---|---:|
-| Initial Gaussian Naive Bayes | 61.33% |
-| Tuned Bayesian model | 65.33% |
-| Temporal Bayesian model | 91.33% |
-| Temporal model with decision threshold | 93.33% |
+#### Reserved-Test Results
 
-The nominal false-alarm rate decreased from 65.33% in the original classifier to 2.67% in the temporal threshold configuration.
+| Metric | Static Bayesian Threshold | Temporal Bayesian Threshold |
+|---|---:|---:|
+| Accuracy | 68.00% | 90.67% |
+| Balanced accuracy | 77.78% | 87.11% |
+| Macro F1 | 70.45% | 87.57% |
+| Log loss | 1.1925 | 0.8921 |
+| Brier score | 0.5505 | 0.3868 |
+| Nominal false-alarm rate | 46.67% | 4.00% |
+| Fault detection recall | 94.67% | 94.67% |
 
-These are development validation results. The reserved test partition has not been scored.
+The temporal model achieved 90.67% accuracy on 150 reserved observation windows from 25 cases.
 
-### Transition to Request-Level Estimation
-
-Although RCAEval supports system-level fault classification, it does not provide the request-level execution-state labels and recovery-action outcomes required for SURE.
-
-Identifying a system fault does not necessarily establish whether a particular operation has already executed.
-
-Therefore, the RCAEval models remain supporting research components. They are not currently used directly by the live recovery planner.
+B1 and B2 constitute supporting telemetry-based fault-estimation research. They are not directly integrated into the current live request-recovery engine.
 
 ---
 
-## 6. Request-Level Dataset Generation
+## 6. B3 — Request-Level Bayesian Execution-State Estimation
 
-A custom experimental dataset was generated using the Ballerina service.
+RCAEval does not contain the request-level execution-state labels and recovery-action outcomes required for SURE.
 
-The collection process recorded:
+A custom dataset was therefore generated using the Ballerina experimental service.
 
-- Client-side error observations.
-- Configured initial request timeouts.
-- Elapsed execution time.
-- Deduplication support.
-- Ground-truth execution states.
-- Selected recovery actions.
-- Observed recovery responses.
-- Recovery-action durations.
-- Subsequent execution states.
-- Independent execution-effect counts.
-
-### Single-Step Collection
+### Dataset Generation
 
 | Property | Count |
 |---|---:|
-| Initial experimental episodes | 1,008 |
+| Experimental episodes | 1,008 |
 | Raw recovery samples | 864 |
-| Quarantined recovery samples | 54 |
+| Quarantined samples | 54 |
 | Validated recovery samples | 810 |
+| Training samples | 405 |
+| Validation samples | 201 |
+| Reserved test samples | 204 |
 
-Timestamp inconsistencies between the Python client and Ballerina server were investigated. A conservative boundary-screening procedure was introduced to quarantine uncertain state labels rather than silently modifying the original dataset.
+Timestamp-boundary inconsistencies were investigated and uncertain state labels were quarantined.
 
-### Dataset Partitioning
-
-| Partition | Recovery Samples |
-|---|---:|
-| Training | 405 |
-| Validation | 201 |
-| Reserved testing | 204 |
-
-The dataset and episode-level split definitions are shared resources for the Bayesian and Random Forest estimator comparison.
-
----
-
-## 7. B3 — Bayesian Execution-State Estimator
-
-The B3 model estimates the probability of an ambiguous request being unstarted, processing or completed.
-
-The current estimator uses Dirichlet-smoothed conditional frequency estimates.
-
-### Runtime Conditioning Features
+### Runtime Input Features
 
 - `error`
 - `keyed`
 - `initial_timeout_ms`
 
-Elapsed time is available as an observable feature but is not used as a conditioning variable in the frozen B3 estimator.
+The estimator uses Dirichlet-smoothed conditional frequency estimates with additive smoothing.
 
-Ground-truth execution states, injected failure modes and future recovery outcomes are excluded from runtime estimator inputs.
+The output is a probability distribution over:
 
-The model outputs a probability distribution rather than only a predicted execution-state class.
-
-Example output:
-
-```json
-{
-  "unstarted": 0.1316,
-  "processing": 0.2237,
-  "completed": 0.6447
-}
+```text
+P(unstarted)
+P(processing)
+P(completed)
 ```
 
-### Validation Results
+Privileged information such as injected failure mode, server-side execution state and future recovery outcomes is excluded from runtime estimator inputs.
 
-| Metric | Global Prior Baseline | B3 Bayesian |
+### Reserved-Test Performance
+
+| Metric | Global Prior Baseline | Bayesian B3 |
 |---|---:|---:|
-| Accuracy | 53.73% | 68.66% |
-| Balanced accuracy | 33.33% | 50.88% |
-| Macro F1 | 23.30% | 48.79% |
-| Log loss | 0.9993 | 0.7957 |
-| Multiclass Brier score | 0.5989 | 0.4567 |
+| Accuracy | 52.94% | 68.63% |
+| Balanced accuracy | 33.33% | 51.11% |
+| Macro F1 | 23.08% | 48.90% |
+| Log loss | 1.0028 | 0.7946 |
+| Brier score | 0.6021 | 0.4559 |
 
-The conditional Bayesian estimator improved probability prediction over the global prior baseline.
+### Confusion Matrix
 
-However, the model did not correctly classify processing requests as the most probable state in the validation confusion matrix.
+Rows represent actual execution states and columns represent predicted states.
 
-This limitation motivates maintaining probabilistic beliefs and obtaining additional information through recovery actions instead of relying exclusively on hard classifications.
+| Actual / Predicted | Unstarted | Processing | Completed |
+|---|---:|---:|---:|
+| Unstarted | 32 | 0 | 28 |
+| Processing | 0 | 0 | 36 |
+| Completed | 0 | 0 | 108 |
+
+B3 improves probability estimation compared with the global-prior baseline.
+
+However, processing-state classification remains a limitation. Processing is not selected as the most probable class in the reserved test partition.
+
+The recovery engine therefore maintains the full probability distribution instead of relying exclusively on hard state classifications.
 
 ---
 
-## 8. B4 — Single-Step Action Transition Model
+## 7. B4 — Recovery Action Transition Model
 
-The action outcome model estimates the joint probability distribution of:
+The action transition model estimates the joint probability distribution of:
 
-- The next execution state.
-- The recovery observation.
-- The recovery-action duration.
+- Subsequent execution state.
+- Recovery observation.
+- Recovery-action duration.
 
-The original transition model is conditioned on the current execution state, selected action and deduplication support.
+The original model was conditioned on the current execution state, selected recovery action and deduplication support.
 
 ### Supported Recovery Actions
 
-| Action | Description |
+| Action | Purpose |
 |---|---|
-| Wait | Allow execution to progress |
+| Wait | Allow the operation to progress |
 | Reconcile | Query authoritative execution status |
-| Retry | Resubmit the operation under a verified safety contract |
-| Failover | Contact an alternative endpoint under a shared safety contract |
-| Stop | Terminate recovery without further actions |
+| Retry | Safely resubmit an operation |
+| Failover | Contact an alternative endpoint under a verified safety contract |
+| Stop | Terminate recovery |
 
-### Validation Results
+Initial single-step experiments identified limitations in modelling natural execution completion and time-dependent transitions.
 
-| Metric | Known-State Diagnostic | B3 Belief Prediction |
-|---|---:|---:|
-| Next-state accuracy | 99.50% | 70.15% |
-| Observation accuracy | 87.56% | 70.15% |
-| Joint log loss | 1.2704 | 2.0351 |
-| Confirmation Brier score | 0.0449 | 0.0974 |
-| Duration MAE | 28.85 ms | 31.51 ms |
-
-The known-state diagnostic uses true execution states for offline assessment only.
-
-The initial model was limited by sparse state-action combinations, fixed action durations and the absence of multi-step training trajectories.
+These findings motivated multi-step trajectory collection.
 
 ---
 
-## 9. Sequential Bayesian Belief Updating
+## 8. B4.1 — Time-Aware Transition Modelling
 
-SURE maintains a probability distribution over the hidden execution states throughout the recovery process.
+### Multi-Step Dataset Collection
 
-After each recovery action, the belief distribution is updated using the observed response and the learned state-transition and observation probabilities.
-
-This allows the recovery engine to adapt its decisions as new evidence becomes available.
-
-For example:
-
-1. An initial timeout produces an uncertain execution-state belief.
-2. A reconciliation action returns a pending response.
-3. The probability of the processing state increases.
-4. The planner evaluates whether waiting or another safe recovery action is appropriate.
-5. Subsequent observations further update the belief.
-
-Action duration is currently used to advance the elapsed-time context. Fully conditioning runtime belief updates on observed action duration remains a possible extension.
-
----
-
-## 10. Semantic Safety Constraints
-
-Semantic safety is enforced independently of probabilistic predictions.
-
-The recovery engine must not authorize an unsafe action merely because the predicted probability of successful execution is high.
-
-| Recovery Action | Without Deduplication | With Verified Deduplication |
-|---|---|---|
-| Wait | Allowed | Allowed |
-| Reconcile | Allowed | Allowed |
-| Stop | Allowed | Allowed |
-| Retry ambiguous operation | Blocked | Conditionally allowed |
-| Failover ambiguous operation | Blocked | Conditionally allowed |
-
-Retry and failover require appropriate operation-level execution guarantees. Failover requires deduplication protection across the relevant endpoints.
-
-A timeout, an ordinary not-found response or a high predicted probability of non-execution is not sufficient evidence to authorize an otherwise unsafe retry.
-
-The experimental system additionally applies:
-
-- End-to-end deadline constraints.
-- Recovery network-call budgets.
-- Maximum recovery-step limits.
-- Conservative action-admission rules.
-
-The current implementation is an experimental safety mechanism rather than a formally verified production-grade execution guarantee.
-
----
-
-## 11. Greedy and Bounded Lookahead Planning
-
-### V2 — Bayesian Greedy Recovery
-
-The greedy planner evaluates the immediate expected utility of each permissible recovery action.
-
-After executing the selected action, it updates the execution belief and repeats the decision process.
-
-### V4 — Bayesian Bounded Lookahead Recovery
-
-The bounded lookahead planner evaluates possible future recovery actions and observations within a limited planning horizon.
-
-This allows the planner to account for the future benefit of waiting, reconciliation and preserving recovery resources.
-
-The planner performs sequential decision-making rather than relying on a fixed recovery-action sequence.
-
-### Recovery Objective
-
-The improved planner maximizes expected utility based on:
-
-- Probability of confirmed on-time completion.
-- Recovery network-call cost.
-- Time consumed relative to the end-to-end deadline.
-
-Semantic safety and resource constraints are mandatory restrictions rather than optional reward penalties.
-
----
-
-## 12. Initial Live Recovery Experiments
-
-The initial Bayesian planner was evaluated against conventional recovery policies using the live Ballerina service.
-
-| Policy | Confirmed On-Time Completion |
-|---|---:|
-| Fixed reconciliation | 35.71% |
-| Safe retry | 42.86% |
-| Bayesian greedy | 57.14% |
-| Bayesian lookahead | 64.29% |
-
-The initial pilot contained 14 matched scenarios and 56 request episodes.
-
-No duplicate execution effects or deadline overruns were recorded.
-
-### Identified Limitations
-
-Detailed action-trace analysis revealed:
-
-- Excessive waiting in the initial lookahead implementation.
-- Missing natural execution-completion transitions in the single-step model.
-- Insufficient modelling of elapsed time.
-- Premature exhaustion of recovery-call budgets.
-- Absence of stronger failover-capable conventional baselines.
-
-These observations motivated multi-step data collection and time-aware transition modelling.
-
----
-
-## 13. Multi-Step Recovery Data Collection
-
-A sequential recovery collector was developed to capture execution-state changes across multiple recovery actions.
-
-Example recovery sequences include:
-
-- Wait → Wait → Wait → Reconcile
-- Reconcile → Wait → Reconcile
-- Wait → Reconcile → Wait → Reconcile
-- Wait → Wait → Wait → Failover
-- Failover → Wait → Retry
-- Retry → Wait → Reconcile
-
-Retry and failover sequences are restricted by semantic safety requirements.
-
-### Dataset Summary
-
-| Dataset | Experimental Episodes | Usable Recovery Steps |
+| Dataset | Episodes | Usable Recovery Steps |
 |---|---:|---:|
 | Original single-step collection | 1,008 | 810 |
 | Multi-step pilot | 189 | 481 |
 | Expanded multi-step collection | 756 | 1,935 |
 
-The expanded collector introduced:
+The expanded collection introduced:
 
-- High-resolution action-duration measurements.
-- Sequential action-history recording.
-- Chronological trajectory auditing.
-- Evidence-based confirmation-boundary resolution.
-- Quarantine of uncertain state labels.
-- Preservation of observable histories from quarantined steps.
+- Sequential recovery trajectories.
+- High-resolution duration measurements.
+- Chronological action histories.
+- Execution-state boundary auditing.
+- Conservative label quarantine.
+- Natural completion transitions during waiting.
 
-### Natural Completion During Waiting
+The expanded dataset was divided into:
 
-The expanded dataset contained 177 usable waiting transitions beginning in the processing state.
-
-| Outcome | Count |
-|---|---:|
-| Processing → Processing | 129 |
-| Processing → Completed | 48 |
-
-### Effect of Elapsed Time
-
-| Elapsed Time Before Waiting | Observed Completions | Completion Rate |
-|---|---:|---:|
-| Below 150 ms | 0/32 | 0% |
-| 150–224 ms | 0/79 | 0% |
-| 225–274 ms | 15/33 | 45.45% |
-| 275–324 ms | 33/33 | 100% |
-
-These findings demonstrate time-dependent execution dynamics within the synthetic experimental environment.
-
-They are not assumed to represent universal completion probabilities for real distributed applications.
-
----
-
-## 14. B4.1 — Time-Aware Bayesian Transition Model
-
-The transition model was extended to incorporate elapsed time and previous recovery actions and observations.
-
-Three alternative transition configurations were implemented.
-
-| Model | Conditioning Information |
-|---|---|
-| B4.0 | Execution state, action and deduplication |
-| B4.1a | B4.0 information and elapsed time |
-| B4.1b | B4.1a information and previous action/observation |
-
-Hierarchical Bayesian backoff is used to handle sparse combinations by combining detailed contextual estimates with more general transition distributions.
-
-### Dataset Partitioning
-
-| Partition | Episodes | Usable Recovery Steps |
+| Partition | Episodes | Usable Steps |
 |---|---:|---:|
 | Training | 378 | 967 |
 | Validation | 189 | 481 |
 | Reserved testing | 189 | 487 |
 
-Entire trajectories are assigned to individual partitions to prevent episode-level leakage.
+### Transition Model Variants
 
-### Sequential Validation Using Frozen B3
+| Model | Conditioning Information |
+|---|---|
+| B4.0 | Execution state, action and deduplication |
+| B4.1a | B4.0 plus elapsed time |
+| B4.1b | B4.1a plus previous action and observation |
+
+Hierarchical Bayesian backoff is used to handle sparse transition combinations.
+
+### Reserved-Test Performance
+
+The following results use sequential belief replay with the frozen B3 estimator.
 
 | Metric | B4.0 | B4.1a | B4.1b |
 |---|---:|---:|---:|
-| Next-state accuracy | 80.04% | 81.50% | 81.50% |
-| Observation accuracy | 81.29% | 83.16% | 83.37% |
-| Joint log loss | 1.0547 | 1.0229 | 1.0155 |
-| Next-state Brier score | 0.3027 | 0.2856 | 0.2814 |
-| Confirmation Brier score | 0.0619 | 0.0587 | 0.0571 |
-| Duration MAE | 32.69 ms | 32.09 ms | 31.82 ms |
+| Next-state accuracy | 79.88% | 81.72% | 81.72% |
+| Observation accuracy | 81.31% | 83.16% | 83.37% |
+| Joint log loss | 1.1079 | 1.0790 | 1.0740 |
+| Next-state Brier score | 0.3020 | 0.2827 | 0.2777 |
+| Confirmation Brier score | 0.0621 | 0.0586 | 0.0570 |
+| Duration MAE | 33.09 ms | 32.58 ms | 32.36 ms |
 
-The inclusion of elapsed time improved probability prediction.
+B4.1b achieved approximately 8.04% lower next-state Brier error than the matched time-independent model.
 
-B4.1b was provisionally selected as the primary transition model. B4.1a is retained for ablation analysis because the additional benefit of action history is relatively small.
+Time-aware modelling improved probability prediction. The additional benefit of recovery-history conditioning was smaller.
 
----
+B4.1b remains the frozen transition model for subsequent experiments.
 
-## 15. V4.1 — Improved Time-Aware Recovery Planner
-
-V4.1 extends the original recovery planner with:
-
-- Time-aware Bayesian transition probabilities.
-- Previous recovery-action and observation context.
-- Explicit time-consumption penalties.
-- Improved sequential belief updating.
-- High-resolution decision-overhead measurement.
-- Conservative deadline-aware action admission.
-- Recovery-call and maximum-step budgets.
-
-The explicit time penalty was introduced to reduce unnecessary waiting while preserving waiting actions that provide useful future recovery opportunities.
-
-### Development Pilot Results
-
-The updated planner was evaluated across 14 matched scenarios and seven recovery policies, producing 98 request episodes.
-
-| Policy | Overall Completion |
-|---|---:|
-| Fixed reconciliation | 35.71% |
-| Safe retry | 42.86% |
-| Retry backoff | 42.86% |
-| Reconciliation backoff | 42.86% |
-| Bayesian greedy V2.1 | 64.29% |
-| Bayesian lookahead V4.1 | 64.29% |
-| Time-independent lookahead | 71.43% |
-
-The pilot demonstrated that improved probability prediction does not necessarily guarantee improved recovery decisions.
-
-Compared with the earlier V4.0 pilot, V4.1 maintained the same observed completion rate while reducing total waiting actions from 14 to 1 and P95 latency from 593.55 ms to 400.84 ms.
-
-These were separate development experiments involving multiple implementation changes.
+The replay evaluation uses recorded actions and does not constitute counterfactual policy evaluation.
 
 ---
 
-## 16. Conventional Recovery Baselines
+## 9. Sequential Bayesian Belief Updating
 
-The following conventional recovery policies were implemented for comparison:
+The recovery engine maintains a probability distribution over possible execution states throughout recovery.
 
-| Baseline | Description |
-|---|---|
-| Safe retry | Immediate retry when semantically permissible |
-| Fixed reconciliation | Repeated execution-status queries |
-| Retry backoff | Retry following a fixed waiting interval |
-| Reconciliation backoff | Status querying following fixed waiting intervals |
-| Failover backoff | Delayed failover under verified deduplication |
-| Hybrid backoff | Deterministic selection of recovery actions using observed responses |
+After each recovery action:
 
-All policies operate under common semantic safety and resource constraints where applicable.
+1. Predict possible state transitions and observations.
+2. Execute the selected permissible action.
+3. Observe the response.
+4. Update the execution-state belief.
+5. Update elapsed time and remaining resources.
+6. Evaluate the next recovery decision.
 
-The failover-capable baselines were introduced to avoid unfair comparisons between conventional policies and Bayesian planners with access to additional recovery actions.
+Unexpected observations are handled using a fallback to the predicted next-state distribution.
 
----
+An unexpected observation is not treated as successful execution confirmation.
 
-## 17. Planner Sensitivity Analysis
-
-A controlled development sensitivity experiment was conducted to investigate the effects of planning depth, time-cost weight and transition-model context.
-
-| Experimental Property | Value |
-|---|---:|
-| Matched scenarios | 42 |
-| Recovery configurations | 17 |
-| Total request episodes | 714 |
-| Recorded duplicate executions | 0 |
-| Recorded deadline overruns | 0 |
-| Unseen observation updates | 0 |
-
-### Investigated Parameters
-
-- Lookahead depths: 1, 2 and 3.
-- Time-cost weights: 0.00, 0.10 and 0.20.
-- Transition context: time-independent, time-aware and time-and-history-aware.
-
-### Main Results
-
-| Recovery Policy | Overall Completion |
-|---|---:|
-| Bayesian lookahead — Depth 2 | 66.67% |
-| Bayesian lookahead — Depth 3 | 66.67% |
-| Failover backoff | 66.67% |
-| Hybrid backoff | 64.29% |
-| Bayesian greedy | 61.90% |
-| Retry backoff | 47.62% |
-| Safe retry | 42.86% |
-| Reconciliation backoff | 38.10% |
-| Fixed reconciliation | 33.33% |
-
-### Planning-Depth Comparison
-
-The following configurations use a time-cost weight of 0.10 and time-and-history-aware transitions.
-
-| Metric | Depth 1 | Depth 2 | Depth 3 |
-|---|---:|---:|---:|
-| Overall completion | 61.90% | 66.67% | 66.67% |
-| Successful requests | 26 | 28 | 28 |
-| Mean latency | 189.90 ms | 200.95 ms | 213.74 ms |
-| Average recovery calls | 1.36 | 1.40 | 1.31 |
-| Decision overhead | 0.94 ms | 3.31 ms | 10.17 ms |
-
-Depth 2 was provisionally retained as a trade-off between recovery performance and computational overhead.
-
-### Transition Context Ablation
-
-| Configuration | Overall Completion |
-|---|---:|
-| Time-independent lookahead | 61.90% |
-| Time-aware lookahead | 66.67% |
-| Time-and-history-aware lookahead | 66.67% |
-
-Elapsed time provided preliminary improvements in recovery outcomes. Previous action history did not independently improve aggregate completion rates.
+Observed action durations advance the elapsed-time context, although duration itself is not currently used as direct Bayesian observation evidence.
 
 ---
 
-## 18. Detailed Paired Recovery Analysis
+## 10. Semantic Safety Constraints
 
-Bayesian lookahead and failover backoff succeeded in exactly the same 28 matched scenarios and failed in the remaining 14 scenarios.
+Semantic safety restrictions are enforced independently of probabilistic predictions.
 
-After excluding initially successful requests, both methods successfully recovered 22 of 36 initially unsuccessful requests.
+| Action | Unkeyed Operation | Verified Keyed Operation |
+|---|---|---|
+| Wait | Allowed | Allowed |
+| Reconcile | Allowed | Allowed |
+| Stop | Allowed | Allowed |
+| Retry after ambiguous failure | Blocked | Conditionally allowed |
+| Failover after ambiguous failure | Blocked | Conditionally allowed |
 
-Latency and resource usage were compared on the 22 commonly recovered requests.
+A timeout or ordinary not-found response does not prove that an operation has not executed.
 
-| Metric | Bayesian Lookahead | Failover Backoff |
-|---|---:|---:|
-| Recovery success | 61.11% | 61.11% |
-| Mean successful-recovery latency | 211.13 ms | 255.35 ms |
-| Average waiting actions | 0.09 | 1.00 |
-| Average recovery network calls | 1.45 | 1.14 |
-| Decision overhead | 3.79 ms | 0.057 ms |
+Retry and failover require appropriate execution guarantees, including shared deduplication protection across relevant endpoints.
 
-The Bayesian lookahead planner achieved approximately **17.31% lower mean end-to-end latency** among commonly recovered requests and was faster in 17 of the 22 matched cases.
+Probability estimates cannot override mandatory safety restrictions.
 
-However, it consumed more recovery network calls and computational resources.
+The framework additionally enforces:
 
-The results provide preliminary evidence of adaptive recovery efficiency rather than superior recovery-success rates against the strongest conventional baseline.
+- End-to-end deadline restrictions.
+- Recovery network-call budgets.
+- Maximum recovery-step limits.
+- Conservative action-admission rules.
 
-### Greedy Versus Lookahead
-
-Lookahead recovered two additional requests compared with greedy.
-
-Detailed trace analysis identified one case where lookahead preserved its final recovery call by waiting before reconciliation. The other difference occurred despite identical action sequences and was associated with timing variation between runs.
-
-This provides preliminary evidence of useful sequential resource allocation, but does not establish statistically significant superiority.
+These mechanisms are experimentally tested but do not constitute a formal production-grade safety proof or hard real-time guarantee.
 
 ---
 
-## 19. Current Frozen Bayesian Configuration
+## 11. Recovery Planning
 
-The following configuration has been provisionally selected for independent evaluation.
+### V2 — Bayesian Greedy Recovery
 
-| Parameter | Selected Value |
+Evaluates the immediate expected utility of permissible recovery actions and selects the best available action.
+
+Execution-state beliefs are updated following each observed response.
+
+### V4 — Bayesian Bounded Lookahead Recovery
+
+Evaluates possible future recovery actions and observations within a bounded planning horizon.
+
+Lookahead can account for:
+
+- Future execution confirmation.
+- Benefits of obtaining additional information.
+- Natural execution progress during waiting.
+- Remaining recovery-call resources.
+- Deadline restrictions.
+- Future recovery opportunities.
+
+### Recovery Objective
+
+The planner maximizes expected confirmed-on-time completion reward while accounting for recovery network-call costs and time consumption.
+
+Semantic restrictions remain mandatory rather than optional reward penalties.
+
+### Frozen Planner Configuration
+
+| Parameter | Value |
 |---|---|
 | Initial estimator | B3 Bayesian |
 | Transition model | B4.1b |
+| Greedy depth | 1 |
 | Lookahead depth | 2 |
 | Time-cost weight | 0.10 |
 | Network-call cost | 0.025 |
-| Recovery-call budget | 3 |
-| Maximum recovery steps | 4 |
 | Waiting interval | 75 ms |
 | HTTP action timeout | 180 ms |
 | Action-admission margin | 25 ms |
-| Primary conventional comparator | Failover backoff |
-
-Sensitivity experiment configuration identifier:
-
-```text
-d2_t0.10_l2
-```
-
-Model SHA-256 hashes are recorded in the sensitivity experiment configuration for reproducibility.
-
-Further hyperparameter tuning should be separated from independent evaluation.
+| Maximum recovery steps | 4 |
+| Independent recovery-call budgets | 1, 2, 3, 4 |
+| Independent deadlines | 350, 750, 1,250 ms |
+| Initial timeout values | 100, 150, 200 ms |
 
 ---
 
-## 20. Planned Random Forest Integration
+## 12. Development Experiments
 
-The Random Forest estimator will serve as an alternative initial execution-state probability estimator.
+Multiple development experiments were conducted before freezing the selected Bayesian configuration.
 
-It should use the same validated request-level dataset, episode partitions and observable input features as the Bayesian estimator for the primary controlled comparison.
+| Experiment | Matched Scenarios | Request Episodes |
+|---|---:|---:|
+| Initial planner pilot | 14 | 56 |
+| Improved time-aware pilot | 14 | 98 |
+| Planner sensitivity analysis | 42 | 714 |
+| Extended-environment smoke test | 14 | 140 |
 
-### Shared Estimator Features
+The sensitivity analysis investigated:
 
-```text
-error
-keyed
-initial_timeout_ms
-```
+- Planning depths of 1, 2 and 3.
+- Alternative time-cost weights.
+- Time-independent transition models.
+- Time-aware transition models.
+- Time-and-history-aware transition models.
+- Conventional retry, reconciliation and failover baselines.
 
-Both estimators must return probabilities for:
+The selected depth-two planner achieved 66.67% confirmed completion in the development sensitivity experiment.
 
-```text
-unstarted
-processing
-completed
-```
+Failover backoff achieved the same completion rate.
 
-Probability calibration should be evaluated because the recovery planner relies on the full execution-state probability distribution.
+Among the 22 initially unsuccessful requests recovered by both methods, Bayesian lookahead achieved approximately 17.31% lower mean latency.
 
-### Planned Experimental Configurations
-
-| Version | Initial Estimator | Recovery Planner |
-|---|---|---|
-| V2 | Bayesian | Greedy |
-| V3 | Random Forest | Greedy |
-| V4 | Bayesian | Bounded lookahead |
-| V5 | Random Forest | Bounded lookahead |
-
-All four configurations will share the transition model, semantic safety layer, execution environment, resource constraints and evaluation procedures.
-
-This factorial comparison is intended to separate the effect of the initial probability estimator from the effect of the recovery-planning strategy.
-
-V5 does not require combining Bayesian and Random Forest into a single classifier.
-
-### Shared Integration Files
-
-```text
-bayesian/outputs/b3/recovery_validated.csv
-bayesian/outputs/b3/episode_splits.csv
-bayesian/outputs/b3/validation_metrics.json
-bayesian/outputs/b41/kernel_tables.json
-bayesian/outputs/b41/validation_metrics.json
-```
+These development results were used for configuration selection and are distinct from independent evaluation results.
 
 ---
 
-## 21. Repository Structure
+## 13. Independent Recovery Evaluation
 
-Relevant development files:
+The Bayesian configuration and experimental protocol were frozen before independent evaluation.
+
+### Experimental Design
+
+| Experimental Variable | Levels |
+|---|---:|
+| Fault families | 7 |
+| Deduplication settings | 2 |
+| Initial timeout settings | 3 |
+| Deadline settings | 3 |
+| Recovery-call budgets | 4 |
+| Matched scenarios | 504 |
+| Recovery policies | 10 |
+| Total request episodes | 5,040 |
+
+Fault schedules were generated using seeded configurations, and policy execution order was randomized within each matched scenario.
+
+Separate policy runs can experience different actual timings despite matching configured conditions.
+
+### Independent Evaluation Results
+
+| Recovery Policy | Successful Requests | Completion Rate |
+|---|---:|---:|
+| Bayesian lookahead — time only | 235/504 | 46.63% |
+| Bayesian lookahead — no time | 235/504 | 46.63% |
+| Bayesian lookahead — time + history | 232/504 | 46.03% |
+| Failover backoff | 230/504 | 45.63% |
+| Bayesian greedy | 228/504 | 45.24% |
+| Hybrid backoff | 209/504 | 41.47% |
+| Retry backoff | 178/504 | 35.32% |
+| Safe retry | 177/504 | 35.12% |
+| Reconciliation backoff | 148/504 | 29.37% |
+| Fixed reconciliation | 142/504 | 28.17% |
+
+### Recovery of Initially Unconfirmed Requests
+
+| Recovery Policy | Recovered Requests | Recovery Success |
+|---|---:|---:|
+| Bayesian lookahead | 169/441 | 38.32% |
+| Failover backoff | 164/438 | 37.44% |
+| Bayesian greedy | 163/439 | 37.13% |
+| Hybrid backoff | 142/437 | 32.49% |
+
+Initial outcomes varied slightly between separate policy runs, resulting in different denominators.
+
+Confirmed completion is distinct from classification accuracy and actual server-side execution.
+
+---
+
+## 14. Statistical Evaluation
+
+### Bayesian Lookahead vs Failover Backoff
+
+| Metric | Result |
+|---|---:|
+| Lookahead completion rate | 46.03% |
+| Failover backoff completion rate | 45.63% |
+| Completion-rate difference | +0.40 percentage points |
+| 95% success difference CI | -0.79 to +1.59 percentage points |
+| McNemar exact p-value | 0.7539 |
+| Lookahead wins | 6 |
+| Failover backoff wins | 4 |
+| Ties | 494 |
+
+For the 160 initially unsuccessful requests recovered by both policies:
+
+| Metric | Bayesian Lookahead | Failover Backoff |
+|---|---:|---:|
+| Mean end-to-end latency | 256.59 ms | 284.58 ms |
+
+- Mean latency saved: **27.99 ms**
+- Relative latency reduction: **9.83%**
+- 95% paired bootstrap interval: **15.42–40.15 ms saved**
+
+The latency advantage is conditional on both policies successfully recovering the request.
+
+The completion-rate difference is not statistically significant. Statistical equivalence has not been established.
+
+### Bayesian Lookahead vs Hybrid Backoff
+
+| Metric | Result |
+|---|---:|
+| Completion improvement | +4.56 percentage points |
+| Additional successful requests | 23 |
+| Lookahead wins | 29 |
+| Hybrid backoff wins | 6 |
+| Ties | 469 |
+| 95% success difference CI | +2.58 to +6.75 percentage points |
+| McNemar exact p-value | 0.000117 |
+
+Bayesian lookahead achieved a higher confirmed completion rate than hybrid backoff in this comparison.
+
+This result does not independently isolate the contribution of lookahead.
+
+### Bayesian Lookahead vs Bayesian Greedy
+
+| Metric | Greedy | Lookahead |
+|---|---:|---:|
+| Completion rate | 45.24% | 46.03% |
+| Successful requests | 228 | 232 |
+| Average recovery calls | 0.982 | 0.974 |
+| Average waiting actions | 0.000 | 0.333 |
+| Mean decision overhead | 0.99 ms | 3.26 ms |
+
+The completion difference was not statistically significant (McNemar p = 0.3877).
+
+Among 159 commonly recovered requests, lookahead introduced an additional 37.33 ms mean latency.
+
+These results identify a trade-off between sequential planning and immediate recovery efficiency.
+
+### Transition Context Ablation
+
+| Configuration | Completion Rate | Average Recovery Calls |
+|---|---:|---:|
+| Time-independent lookahead | 46.63% | 1.008 |
+| Time-aware lookahead | 46.63% | 0.996 |
+| Time-and-history-aware lookahead | 46.03% | 0.974 |
+
+The selected time-and-history-aware planner achieved lower conditional latency than both simpler lookahead configurations, but did not improve aggregate completion rates.
+
+All secondary comparisons and subgroup analyses should be interpreted with appropriate caution.
+
+---
+
+## 15. Robustness and Failure Analysis
+
+Detailed recovery-trajectory analysis was performed following independent evaluation.
+
+### Performance by Fault Family
+
+| Fault Family | Greedy | Lookahead | Failover Backoff |
+|---|---:|---:|---:|
+| Normal | 72/72 | 71/72 | 71/72 |
+| Response delay | 52/72 | 52/72 | 52/72 |
+| Dropped requests | 28/72 | 27/72 | 28/72 |
+| Endpoint failure | 33/72 | 33/72 | 33/72 |
+| Status service failure | 39/72 | 38/72 | 39/72 |
+| Slow execution | 3/72 | 8/72 | 7/72 |
+| Combined faults | 1/72 | 3/72 | 0/72 |
+
+Lookahead demonstrated its largest aggregate improvements over greedy under slow execution and combined faults.
+
+Individual recovery traces demonstrated how waiting before reconciliation can preserve limited recovery-call resources.
+
+These findings are exploratory rather than independently established subgroup superiority.
+
+### Safety and Resource Verification
+
+Across the 5,040 independent request episodes:
+
+- Zero recorded duplicate execution effects.
+- Zero recorded deadline overruns.
+- No observed recovery-call budget violations.
+- No observed maximum-step violations.
+- No unsafe retry or failover dispatches in unkeyed recovery traces.
+
+### Unexpected Observations
+
+The selected lookahead configuration encountered 57 unexpected observation updates across 37 request episodes.
+
+Most unexpected updates occurred under combined fault conditions.
+
+The recovery engine continued using its conservative belief-update fallback.
+
+### Unresolved Operations
+
+For the 504 requests evaluated using the selected V4 configuration:
+
+| Outcome | Count |
+|---|---:|
+| Confirmed on-time completion | 232 |
+| Execution effect recorded but unconfirmed | 164 |
+| No recorded execution effect | 108 |
+
+Unconfirmed requests must not automatically be treated as failed executions.
+
+### Long Execution Delays
+
+None of the tested recovery policies successfully confirmed the 84 scenarios with configured processing durations exceeding 500 ms.
+
+Some of these scenarios were inherently infeasible because processing alone exceeded the deadline.
+
+Fixed waiting intervals, limited recovery steps, model mismatch and communication delays remain important restrictions.
+
+---
+
+## 16. Reusable Recovery Engine
+
+The evaluated recovery algorithm was extracted into a reusable Python module while preserving the original frozen experimental implementation.
+
+### Runtime Modules
+
+| Module | Purpose |
+|---|---|
+| `sure/recovery_core.py` | Common recovery engine |
+| `sure/recovery_estimators.py` | Bayesian estimator loading and RF adapter |
+| `sure/recovery_http.py` | HTTP communication with the Ballerina fixture |
+| `sure/independent_recovery.py` | Original independent experimental adapter |
+
+The shared recovery engine supports interchangeable probability estimators.
+
+```mermaid
+flowchart TD
+    A[Bayesian B3] --> C[Common Estimator Interface]
+    B[Random Forest - Pending] --> C
+    C --> D[Execution-State Probabilities]
+    D --> E[Shared Transition and Belief Update]
+    E --> F[Greedy Planner]
+    E --> G[Lookahead Planner]
+    F --> H[Semantic Safety and Resource Constraints]
+    G --> H
+    H --> I[Recovery Action Executor]
+    I --> J[Ballerina Service]
+```
+
+The Random Forest adapter supports the expected probability interface, but integration with the collaborator's actual trained model remains pending.
+
+---
+
+## 17. Planned Comparative Configurations
+
+| Version | Initial Estimator | Planner | Status |
+|---|---|---|---|
+| V2 | Bayesian | Greedy | Implemented and evaluated |
+| V3 | Random Forest | Greedy | Pending RF integration |
+| V4 | Bayesian | Bounded lookahead | Implemented and evaluated |
+| V5 | Random Forest | Bounded lookahead | Pending RF integration |
+
+All configurations will share:
+
+- Transition and observation model.
+- Sequential belief-updating mechanism.
+- Semantic safety restrictions.
+- Recovery-action executor.
+- Deadline and resource restrictions.
+- Experimental evaluation procedures.
+
+This factorial comparison will investigate:
+
+- The contribution of the initial probability estimator.
+- The contribution of sequential recovery planning.
+- The interaction between estimator quality and planning strategy.
+
+V5 uses Random Forest for initial execution-state probabilities and the common Bayesian belief-update mechanism. It does not require a combined Bayesian/Random Forest classifier.
+
+---
+
+## 18. Testing and Verification
+
+### Frozen-Model Unit Tests
+
+Eight tests passed, covering:
+
+- Frozen model integrity during setup.
+- Execution-state ordering.
+- Probability-distribution validity.
+- Unkeyed operation safety.
+- Recovery-call budget restrictions.
+- Deadline restrictions.
+- Transition probability mass.
+- Unexpected-observation fallback.
+- Planner action eligibility.
+
+### Packaged Recovery Regression Tests
+
+Six tests passed, including:
+
+- 1,500 scripted policy parity comparisons.
+- Recovery-decision consistency.
+- Belief-update consistency.
+- Recovery-trace consistency.
+- Random Forest probability ordering.
+- Invalid-input and confirmation validation.
+
+### Live Integration Testing
+
+The packaged engine was tested against the extended Ballerina service.
+
+| Property | Result |
+|---|---:|
+| Matched scenarios | 14 |
+| Recovery configurations | 2 |
+| Live integration episodes | 28 |
+| Greedy confirmations | 7/14 |
+| Lookahead confirmations | 7/14 |
+| Integration test result | Passed |
+
+The live integration smoke test verifies implementation compatibility and is not an independent performance comparison.
+
+---
+
+## 19. Final Bayesian Performance Summary
+
+| Metric | Result |
+|---|---:|
+| Temporal fault classification accuracy | 90.67% |
+| Temporal fault classification macro F1 | 87.57% |
+| Temporal fault false-alarm rate | 4.00% |
+| Initial execution-state accuracy | 68.63% |
+| Initial execution-state macro F1 | 48.90% |
+| Next-state prediction accuracy | 81.72% |
+| Recovery observation prediction accuracy | 83.37% |
+| Independent matched scenarios | 504 |
+| Independent request episodes | 5,040 |
+| Selected lookahead completion rate | 46.03% |
+| Recovery of initially unconfirmed requests | 38.32% |
+| Conditional latency reduction vs failover backoff | 9.83% |
+| Completion improvement vs hybrid backoff | +4.56 percentage points |
+| Recorded duplicate execution effects | 0 |
+| Recorded deadline overruns | 0 |
+| Unit and regression tests passed | 14 |
+| Scripted parity comparisons | 1,500 |
+| Packaged live integration episodes | 28 |
+
+The prediction metrics concern different tasks and must not be combined into a single system accuracy.
+
+---
+
+## 20. Repository Structure
+
+Relevant Bayesian development and evaluation files:
 
 ```text
 SURE_starter/
-├── ballerina_service/
-│   └── service.bal
-├── ballerina_client/
-│   └── client.bal
-├── sure/
-│   ├── __init__.py
-│   ├── reference_service.py
-│   ├── policy.py
-│   └── experiment.py
-├── bayesian/
-│   ├── audit_dataset.py
-│   ├── prepare_rcaeval.py
-│   ├── train_bayesian.py
-│   ├── tune_bayesian.py
-│   ├── temporal_bayesian.py
-│   ├── collect_balanced.py
-│   ├── train_execution_bayes.py
-│   ├── train_action_kernel.py
-│   ├── evaluate_bayesian_planner.py
-│   ├── collect_multistep.py
-│   ├── collect_multistep_v2.py
-│   ├── train_time_aware_kernel.py
-│   ├── evaluate_time_aware_planner.py
-│   ├── evaluate_planner_sensitivity.py
-│   └── outputs/
-├── data/
-├── tests/
-│   └── test_policy.py
-├── requirements.txt
-├── .gitignore
-└── README.md
+|
+|-- ballerina_service/
+|   |-- service.bal
+|   `-- extended_service.bal
+|
+|-- ballerina_client/
+|   `-- client.bal
+|
+|-- sure/
+|   |-- __init__.py
+|   |-- reference_service.py
+|   |-- policy.py
+|   |-- experiment.py
+|   |-- independent_recovery.py
+|   |-- recovery_core.py
+|   |-- recovery_estimators.py
+|   `-- recovery_http.py
+|
+|-- bayesian/
+|   |-- audit_dataset.py
+|   |-- prepare_rcaeval.py
+|   |-- train_bayesian.py
+|   |-- tune_bayesian.py
+|   |-- temporal_bayesian.py
+|   |-- collect_balanced.py
+|   |-- train_execution_bayes.py
+|   |-- train_action_kernel.py
+|   |-- evaluate_bayesian_planner.py
+|   |-- collect_multistep.py
+|   |-- collect_multistep_v2.py
+|   |-- train_time_aware_kernel.py
+|   |-- evaluate_time_aware_planner.py
+|   |-- evaluate_planner_sensitivity.py
+|   |-- independent_evaluation.py
+|   |-- score_frozen_holdouts.py
+|   |-- check_packaged_recovery.py
+|   |-- export_rf_handover.py
+|   `-- outputs/
+|
+|-- data/
+|
+|-- tests/
+|   |-- test_policy.py
+|   |-- test_frozen_recovery.py
+|   `-- test_recovery_core.py
+|
+|-- requirements.txt
+|-- INDEPENDENT_README.txt
+|-- PACKAGED_RECOVERY_README.md
+|-- BAYESIAN_FINAL_README.md
+|-- RF_HANDOVER.md
+|-- .gitignore
+`-- README.md
 ```
 
-### Bayesian Development Scripts
-
-| Script | Purpose |
-|---|---|
-| `audit_dataset.py` | RCAEval dataset integrity analysis |
-| `prepare_rcaeval.py` | Telemetry window preparation |
-| `train_bayesian.py` | Initial Gaussian Naive Bayes training |
-| `tune_bayesian.py` | Bayesian tuning and probability calibration |
-| `temporal_bayesian.py` | Temporal fault-belief filtering |
-| `collect_balanced.py` | Balanced request-level data collection |
-| `train_execution_bayes.py` | B3 execution-state estimator |
-| `train_action_kernel.py` | B4 single-step outcome model |
-| `evaluate_bayesian_planner.py` | Initial greedy and lookahead evaluation |
-| `collect_multistep.py` | Multi-step pilot collection |
-| `collect_multistep_v2.py` | Expanded high-resolution trajectory collection |
-| `train_time_aware_kernel.py` | Hierarchical time-aware transition modelling |
-| `evaluate_time_aware_planner.py` | V4.1 evaluation and context ablation |
-| `evaluate_planner_sensitivity.py` | Planning-depth and reward sensitivity analysis |
+This structure describes the Bayesian component and relevant shared files rather than any separate Random Forest development branch.
 
 ---
 
-## 22. Installation and Execution
+## 21. Installation
 
 ### Requirements
 
-- Python 3
-- Ballerina
-- Python virtual environment
-- NumPy
-- Pandas
-- Scikit-learn
-- Joblib
-- Requests
-- Other dependencies specified in `requirements.txt`
+- Python 3.
+- Ballerina.
+- NumPy.
+- Pandas.
+- Scikit-learn.
+- Joblib.
+- Requests.
+- Dependencies specified in `requirements.txt`.
 
-### Set Up the Python Environment
+### Windows PowerShell Setup
 
 ```powershell
 python -m venv .venv
@@ -804,232 +888,390 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-### Start the Ballerina Service
+If the virtual environment already exists, activate it instead of recreating it.
 
-Open a separate terminal:
+### Start the Original Development Service
 
 ```powershell
 bal run ballerina_service/service.bal
 ```
 
-Check service availability:
+### Start the Extended Experimental Service
 
 ```powershell
-Invoke-RestMethod -Uri "http://localhost:9090/health"
+bal run ballerina_service/extended_service.bal
 ```
 
-### Generate the Single-Step Recovery Dataset
+Verify service availability:
+
+```powershell
+Invoke-RestMethod -Uri "http://127.0.0.1:9091/health"
+```
+
+Expected fixture identifier:
+
+```text
+sure_extended_v1
+```
+
+---
+
+## 22. Experimental Reproduction
+
+The following commands document the original development and evaluation pipeline.
+
+Existing datasets, trained models and frozen experimental outputs should be preserved. Do not rerun data collection, training or evaluation into existing result directories without preparing a separate reproduction workspace.
+
+### Request-Level Dataset Generation
 
 ```powershell
 python -m bayesian.collect_balanced --repeats 8
 ```
 
-### Train the Bayesian Execution Estimator
+### Bayesian Execution-State Training
 
 ```powershell
 python -m bayesian.train_execution_bayes
 ```
 
-### Train the Original Action Outcome Model
+### Original Transition Model
 
 ```powershell
 python -m bayesian.train_action_kernel
 ```
 
-### Run the Initial Recovery Pilot
+### Initial Planner Evaluation
 
 ```powershell
 python -m bayesian.evaluate_bayesian_planner --n 14
 ```
 
-### Generate Multi-Step Pilot Data
+### Multi-Step Data Collection
 
 ```powershell
 python -m bayesian.collect_multistep --repeats 1
-```
 
-### Generate the Expanded Multi-Step Dataset
-
-```powershell
 python -m bayesian.collect_multistep_v2 --repeats 4
 ```
 
-### Train Time-Aware Transition Models
+### Time-Aware Transition Model
 
 ```powershell
 python -m bayesian.train_time_aware_kernel --b3 bayesian/outputs/b3/bayesian_b3.joblib
 ```
 
-### Evaluate the Improved Planner
+### Improved Planner Evaluation
 
 ```powershell
 python -m bayesian.evaluate_time_aware_planner --n 14
 ```
 
-### Conduct Planner Sensitivity Analysis
+### Sensitivity Analysis
 
 ```powershell
 python -m bayesian.evaluate_planner_sensitivity --n 42
 ```
 
-Live collection and recovery evaluation require the experimental service to be running. Offline model training does not require the service.
+### Independent Evaluation
 
-Existing experimental datasets, model artifacts and results should be preserved before rerunning scripts that write to the same output locations.
+With the extended Ballerina fixture running:
+
+```powershell
+python -m bayesian.independent_evaluation verify
+
+python -m bayesian.independent_evaluation smoke
+
+python -m bayesian.independent_evaluation analyze-smoke
+
+python -m bayesian.independent_evaluation freeze
+
+python -m bayesian.score_frozen_holdouts
+
+python -m bayesian.independent_evaluation run
+
+python -m bayesian.independent_evaluation analyze
+```
+
+The original independent evaluation has already been completed.
+
+The freeze and evaluation scripts protect existing experimental results against accidental overwriting.
 
 ---
 
-## 23. Experimental Outputs
+## 23. Running Tests
+
+### Frozen-Model Tests
+
+```powershell
+python -m unittest discover -s tests -p "test_frozen_recovery.py" -v
+```
+
+Expected:
+
+```text
+Ran 8 tests
+OK
+```
+
+### Packaged Recovery Tests
+
+```powershell
+python -m unittest discover -s tests -p "test_recovery_core.py" -v
+```
+
+Expected:
+
+```text
+Ran 6 tests
+OK
+```
+
+### Live Integration Smoke Test
+
+Start the extended fixture before running:
+
+```powershell
+python -m bayesian.check_packaged_recovery
+```
+
+The original packaged smoke evaluation has already been completed. Preserve its output before attempting a fresh reproduction.
+
+---
+
+## 24. Random Forest Integration
+
+The shared request-level dataset contains:
+
+- 405 training samples.
+- 201 validation samples.
+- 204 reserved test samples.
+
+The primary RF comparison must use the same features and partitions as B3.
+
+### Export Development Data
+
+```powershell
+python -m bayesian.export_rf_handover
+```
+
+Expected output files:
+
+```text
+bayesian/outputs/rf_handover_v1/
+|-- train.csv
+|-- validation.csv
+`-- manifest.json
+```
+
+The reserved test partition is intentionally excluded from the development export.
+
+The Random Forest implementation should provide a fitted probability estimator supporting all three execution-state classes, together with reproducible training code and validation results.
+
+The shared runtime adapter is available in `sure/recovery_estimators.py`.
+
+See `RF_HANDOVER.md` for the complete training and integration contract.
+
+---
+
+## 25. Experimental Artifacts and Reproducibility
+
+Important model and result directories:
 
 ```text
 bayesian/outputs/
-├── b3/
-│   ├── bayesian_b3.joblib
-│   ├── episode_splits.csv
-│   ├── recovery_validated.csv
-│   ├── training_state_counts.csv
-│   ├── validation_metrics.json
-│   └── validation_predictions.csv
-├── b4/
-│   └── action_outcomes.csv
-├── b41/
-│   ├── episode_splits.csv
-│   ├── training_coverage.csv
-│   ├── validation_metrics.json
-│   ├── kernel_tables.json
-│   ├── B4.0_matched_validation.csv
-│   ├── B4.1a_time_validation.csv
-│   └── B4.1b_time_history_validation.csv
-├── planner_pilot/
-├── planner_v41_pilot/
-└── planner_sensitivity/
-    ├── config.json
-    ├── design.csv
-    ├── runs.csv
-    ├── summary.csv
-    ├── summary_by_keyed.csv
-    ├── summary_by_mode.csv
-    └── paired_comparisons.csv
+|
+|-- b3/
+|   |-- bayesian_b3.joblib
+|   |-- recovery_validated.csv
+|   |-- episode_splits.csv
+|   `-- validation_metrics.json
+|
+|-- b41/
+|   |-- kernel_tables.json
+|   |-- episode_splits.csv
+|   `-- validation_metrics.json
+|
+|-- planner_sensitivity/
+|
+|-- independent_smoke/
+|
+|-- independent_v1/
+|   |-- protocol.json
+|   |-- design.json
+|   |-- holdouts/
+|   `-- live/
+|       |-- runs.csv
+|       |-- summary.csv
+|       |-- by_family.csv
+|       |-- by_budget.csv
+|       |-- by_deadline.csv
+|       |-- by_keyed.csv
+|       |-- by_initial_timeout.csv
+|       |-- by_processing_range.csv
+|       |-- initially_unconfirmed_summary.csv
+|       |-- paired_analysis.json
+|       `-- complete.json
+|
+|-- packaged_smoke/
+|
+`-- rf_handover_v1/
 ```
 
-### Evaluation Metrics
+### Frozen Model SHA-256 Hashes
 
-The framework records:
+B3 Bayesian estimator:
 
-- Confirmed on-time completion rate.
-- Recovery success among initially unsuccessful requests.
-- Duplicate execution effects.
-- Unresolved request rate.
-- Deadline-overrun rate.
-- Mean and P95 end-to-end latency.
-- Recovery network-call usage.
-- Waiting-action count.
-- Planner computational overhead.
-- Unexpected recovery observations.
-- Paired wins, losses and ties.
-- Probability-prediction accuracy, log loss and Brier scores.
+```text
+348174d885c1cf679687eff034c6942394651eef30f7b6466d2a0446ec18d3d8
+```
+
+B4.1 transition model:
+
+```text
+c71c371befcbfff09c751d8bdee65382b028cb594475f38006f517306367a3ad
+```
+
+The independent evaluation records frozen model hashes, source-code hashes and experimental design information.
+
+Changes inspired by independent evaluation results must be treated as new research versions requiring fresh evaluation.
 
 ---
 
-## 24. Current Limitations
+## 26. Research Findings
 
-The current implementation remains a research prototype.
+The completed Bayesian investigation provides evidence that:
 
-Identified limitations include:
+1. Temporal Bayesian filtering improves telemetry-based fault estimation and substantially reduces false alarms.
 
-- Synthetic and relatively predictable execution-delay conditions.
-- Limited diversity of service and network environments.
-- Sparse transition observations for certain recovery actions.
-- Imperfect initial execution-state probability estimates.
-- Dependence on the experimental failure distribution.
-- Limited evidence for the additional benefit of action-history conditioning.
-- Higher computational overhead than conventional recovery policies.
-- Increased network-call usage in some Bayesian recovery scenarios.
-- Fixed recovery-action durations and HTTP timeout settings.
-- Incomplete modelling of observed action duration as Bayesian evidence.
-- Conservative action admission rather than guaranteed hard wall-clock deadlines.
+2. Request-level Bayesian estimation improves probability prediction compared with a global-prior baseline.
+
+3. Time-aware transition modelling improves next-state and observation prediction.
+
+4. Sequential recovery planning can preserve limited recovery-call resources in individual scenarios.
+
+5. Bayesian lookahead achieves lower conditional successful-recovery latency than conventional failover backoff in the independent synthetic evaluation.
+
+6. Bayesian lookahead achieves a higher confirmed completion rate than hybrid backoff in the tested environment.
+
+7. Lookahead introduces computational overhead and can be slower than greedy recovery.
+
+8. Overall lookahead superiority over greedy recovery or failover backoff in completion rate has not been established.
+
+9. Semantic safety restrictions prevented recorded inadmissible actions and duplicate execution effects within the evaluated testbed.
+
+The results demonstrate useful recovery trade-offs rather than universal superiority over conventional recovery mechanisms.
+
+---
+
+## 27. Current Limitations
+
+- Imperfect initial execution-state probability estimation.
+- Processing-state classification weakness in B3.
+- Limited runtime observability of hidden execution states.
+- Synthetic single-process experimental environment.
+- Dependence on the training failure distribution.
+- Sparse transition observations for some recovery conditions.
+- Limited performance under long processing delays.
+- Fixed waiting interval and maximum recovery-step count.
+- Higher planner computational overhead.
+- Unexpected observations under combined faults.
+- Conditional latency comparisons rather than unconditional latency guarantees.
 - No formal proof of semantic safety.
-- Random Forest integration not yet completed.
-- Native Ballerina library implementation pending.
+- No guaranteed hard wall-clock deadline enforcement.
+- No production-environment generalization evidence.
+- Random Forest integration pending.
+- Native Ballerina recovery library pending.
 
-The current development experiments do not establish statistically significant superiority, universal semantic safety or generalization to real-world distributed systems.
+Reserved dataset records were previously included in descriptive audits. Their prediction scores were reserved from model selection, but the data was not completely blinded.
 
-Reserved dataset partitions and fresh independent experiments are required for final evaluation.
+The reported statistical results apply to the evaluated synthetic design and should not be generalized directly to production systems.
 
 ---
 
-## 25. Development Roadmap
+## 28. Development Roadmap
 
-### Completed
+### Completed Bayesian Component
 
-- [x] Ballerina experimental service and client.
-- [x] Synthetic distributed failure simulation.
+- [x] Ballerina experimental service.
+- [x] Distributed failure simulation.
 - [x] Independent execution-ledger verification.
-- [x] RCAEval dataset auditing and preprocessing.
-- [x] Gaussian Naive Bayes fault classification.
-- [x] Bayesian parameter tuning and probability calibration.
-- [x] Temporal Bayesian fault filtering.
-- [x] Balanced request-level dataset generation.
+- [x] RCAEval dataset auditing.
+- [x] Bayesian fault classification.
+- [x] Probability calibration and tuning.
+- [x] Temporal Bayesian filtering.
+- [x] Request-level dataset generation.
 - [x] Execution-state label validation.
-- [x] Bayesian execution-state probability estimation.
-- [x] Single-step action outcome modelling.
-- [x] Sequential Bayesian belief updating.
-- [x] Semantic safety constraints.
-- [x] Deadline and recovery-call resource constraints.
-- [x] Bayesian greedy recovery planner.
-- [x] Bayesian bounded lookahead recovery planner.
-- [x] Initial live comparative experiments.
-- [x] Multi-step recovery trajectory collection.
-- [x] High-resolution timing measurements.
-- [x] Hierarchical time-aware transition modelling.
-- [x] Time-aware recovery-objective optimization.
-- [x] Conventional backoff and failover baselines.
-- [x] Transition-context ablation experiments.
-- [x] Planning-depth sensitivity analysis.
-- [x] Reward-weight sensitivity analysis.
-- [x] Development experiments across 714 request episodes.
-- [x] Detailed paired recovery analysis.
-- [x] Provisional Bayesian configuration freeze.
+- [x] Bayesian execution-state estimation.
+- [x] Single-step transition modelling.
+- [x] Multi-step trajectory collection.
+- [x] Time-aware transition modelling.
+- [x] Hierarchical Bayesian backoff.
+- [x] Sequential belief updating.
+- [x] Semantic safety restrictions.
+- [x] Deadline and call-budget restrictions.
+- [x] Greedy recovery planner.
+- [x] Bounded lookahead planner.
+- [x] Conventional recovery baselines.
+- [x] Sensitivity analysis.
+- [x] Transition-context ablation.
+- [x] Extended experimental environment.
+- [x] Frozen experimental protocol.
+- [x] Reserved-test model evaluation.
+- [x] Independent evaluation across 5,040 episodes.
+- [x] Statistical analysis.
+- [x] Robustness and recovery-trace analysis.
+- [x] Reusable Python recovery engine.
+- [x] Common estimator interface.
+- [x] Random Forest probability adapter.
+- [x] Frozen-model unit tests.
+- [x] Packaged regression and parity tests.
+- [x] Live Ballerina integration tests.
+- [x] Bayesian technical documentation.
 
-### Remaining
+### Remaining Shared Project Work
 
-- [ ] Extend the experimental environment with variable execution delays.
-- [ ] Introduce network latency variation and jitter.
-- [ ] Simulate combined faults and intermittent service availability.
-- [ ] Integrate the Random Forest execution-state estimator.
-- [ ] Conduct estimator probability-calibration comparisons.
-- [ ] Evaluate V2, V3, V4 and V5 under identical conditions.
-- [ ] Conduct independent generalization experiments.
-- [ ] Evaluate reserved dataset partitions.
-- [ ] Perform statistical significance and uncertainty analysis.
-- [ ] Investigate additional semantic safety conditions.
-- [ ] Implement the native Ballerina recovery library.
-- [ ] Complete integration testing and technical documentation.
-- [ ] Prepare the final research publication.
+- [ ] Verify RF development dataset export.
+- [ ] Integrate trained Random Forest estimator.
+- [ ] Evaluate RF on the shared reserved partition.
+- [ ] Conduct V2/V3/V4/V5 integration testing.
+- [ ] Conduct fresh factorial comparative experiments.
+- [ ] Analyze estimator and planning-strategy interaction.
+- [ ] Implement native Ballerina recovery runtime.
+- [ ] Conduct native-library regression and integration testing.
+- [ ] Complete final research documentation.
+- [ ] Prepare research publication.
+
+### Potential Future Extensions
+
+- Adaptive waiting durations.
+- Adaptive planning depth.
+- Additional observable execution-state features.
+- Improved handling of unexpected observations.
+- More realistic distributed network-fault injection.
+- Multi-service deployment experiments.
+- Stronger semantic safety verification.
+
+These extensions constitute potential new research versions and are not included in the frozen evaluation results.
 
 ---
 
-## 26. Research Contribution
+## 29. Technical Documentation
 
-SURE investigates probabilistic, semantics-constrained and resource-aware recovery for ambiguous distributed request failures.
+Additional documentation:
 
-The proposed approach combines:
-
-- Hidden execution-state probability estimation.
-- Sequential belief updating.
-- Time-aware execution-transition modelling.
-- Information-gathering recovery actions.
-- Mandatory semantic safety constraints.
-- Deadline and network-call resource management.
-- Bounded sequential recovery planning.
-
-The current development results indicate that Bayesian lookahead can provide useful adaptive recovery behaviour, particularly by reducing unnecessary waiting and improving successful-recovery latency compared with a fixed failover-backoff strategy.
-
-The final research evaluation will determine whether these advantages remain reliable across independent, more diverse distributed-system environments and whether the additional computational and network costs are justified.
+- `BAYESIAN_FINAL_README.md` — Bayesian development and evaluation details.
+- `INDEPENDENT_README.txt` — Independent experimental protocol.
+- `PACKAGED_RECOVERY_README.md` — Reusable recovery engine usage.
+- `RF_HANDOVER.md` — Random Forest training and integration requirements.
 
 ---
 
 ## Project Status
 
-**Bayesian recovery prototype implemented and evaluated.**
+**Bayesian research prototype: Complete and tested.**
 
-**Current phase:** Random Forest integration, independent experimental environment expansion and final comparative evaluation.
+The Bayesian component includes trained probabilistic estimators, time-aware transition modelling, sequential belief updating, resource-aware recovery planning, semantic safety enforcement, independent experimental evaluation and reusable runtime implementation.
+
+**Current project phase:** Random Forest integration and preparation for native Ballerina runtime implementation.
+
+The overall research project is ongoing.
