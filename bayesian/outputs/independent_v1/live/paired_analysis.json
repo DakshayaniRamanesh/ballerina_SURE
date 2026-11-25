@@ -1,0 +1,107 @@
+{
+  "failover_backoff": {
+    "n": 504,
+    "wins": 6,
+    "losses": 4,
+    "ties": 494,
+    "success_difference": 0.003968253968253968,
+    "success_difference_ci95": [
+      -0.007936507936507936,
+      0.015873015873015872
+    ],
+    "mcnemar_exact_p": 0.75390625,
+    "commonly_recovered_n": 160,
+    "mean_latency_saved_ms": 27.986181885004044,
+    "latency_saved_ci95": [
+      15.420157179459931,
+      40.152374887168406
+    ],
+    "v4_mean_latency_ms": 256.59252125620844,
+    "comparator_mean_latency_ms": 284.5787031412125,
+    "recovery_calls_difference": 0.031746031746031744
+  },
+  "v2": {
+    "n": 504,
+    "wins": 8,
+    "losses": 4,
+    "ties": 492,
+    "success_difference": 0.007936507936507936,
+    "success_difference_ci95": [
+      -0.003968253968253968,
+      0.021825396825396824
+    ],
+    "mcnemar_exact_p": 0.3876953125,
+    "commonly_recovered_n": 159,
+    "mean_latency_saved_ms": -37.33049811957017,
+    "latency_saved_ci95": [
+      -49.43093739740503,
+      -25.867075715949703
+    ],
+    "v4_mean_latency_ms": 257.7984641602954,
+    "comparator_mean_latency_ms": 220.46796604072523,
+    "recovery_calls_difference": -0.007936507936507936
+  },
+  "v4_no_time": {
+    "n": 504,
+    "wins": 2,
+    "losses": 5,
+    "ties": 497,
+    "success_difference": -0.005952380952380952,
+    "success_difference_ci95": [
+      -0.015873015873015872,
+      0.003968253968253968
+    ],
+    "mcnemar_exact_p": 0.453125,
+    "commonly_recovered_n": 162,
+    "mean_latency_saved_ms": 14.45748022456228,
+    "latency_saved_ci95": [
+      4.658176087008583,
+      24.643639814853668
+    ],
+    "v4_mean_latency_ms": 268.22841481809263,
+    "comparator_mean_latency_ms": 282.6858950426549,
+    "recovery_calls_difference": -0.03373015873015873
+  },
+  "v4_time_only": {
+    "n": 504,
+    "wins": 1,
+    "losses": 4,
+    "ties": 499,
+    "success_difference": -0.005952380952380952,
+    "success_difference_ci95": [
+      -0.015873015873015872,
+      0.001984126984126984
+    ],
+    "mcnemar_exact_p": 0.375,
+    "commonly_recovered_n": 166,
+    "mean_latency_saved_ms": 11.043278918208847,
+    "latency_saved_ci95": [
+      3.9512664483972344,
+      19.07033689151327
+    ],
+    "v4_mean_latency_ms": 267.0825494025127,
+    "comparator_mean_latency_ms": 278.12582832072155,
+    "recovery_calls_difference": -0.021825396825396824
+  },
+  "hybrid_backoff": {
+    "n": 504,
+    "wins": 29,
+    "losses": 6,
+    "ties": 469,
+    "success_difference": 0.04563492063492063,
+    "success_difference_ci95": [
+      0.025793650793650792,
+      0.06746031746031746
+    ],
+    "mcnemar_exact_p": 0.0001168418675661087,
+    "commonly_recovered_n": 137,
+    "mean_latency_saved_ms": -0.4594386963948716,
+    "latency_saved_ci95": [
+      -11.679740436668814,
+      10.198114019501812
+    ],
+    "v4_mean_latency_ms": 256.6345518348861,
+    "comparator_mean_latency_ms": 256.1751131384912,
+    "recovery_calls_difference": -0.1527777777777778
+  }
+}

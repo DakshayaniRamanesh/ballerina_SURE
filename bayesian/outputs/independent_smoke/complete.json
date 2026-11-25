@@ -1,0 +1,8 @@
+{
+  "rows": 140,
+  "model_sha256": {
+    "b3": "348174d885c1cf679687eff034c6942394651eef30f7b6466d2a0446ec18d3d8",
+    "kernel": "c71c371befcbfff09c751d8bdee65382b028cb594475f38006f517306367a3ad"
+  },
+  "design_sha256": "727e1b7e86fae7a1bd5dc48d426f255b5ce8fec0362a7fe8fc51069e77106ec2"
+}

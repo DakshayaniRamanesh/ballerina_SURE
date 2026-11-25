@@ -1,0 +1,177 @@
+{
+  "b3": {
+    "accuracy": 0.6862745098039216,
+    "balanced_accuracy": 0.5111111111111111,
+    "macro_f1": 0.4890269151138716,
+    "log_loss": 0.7945679078054126,
+    "multiclass_brier": 0.4558722771313445,
+    "confusion_matrix": [
+      [
+        32,
+        0,
+        28
+      ],
+      [
+        0,
+        0,
+        36
+      ],
+      [
+        0,
+        0,
+        108
+      ]
+    ]
+  },
+  "b3_global_prior": {
+    "accuracy": 0.5294117647058824,
+    "balanced_accuracy": 0.3333333333333333,
+    "macro_f1": 0.23076923076923075,
+    "log_loss": 1.0028037845431241,
+    "multiclass_brier": 0.6021121683967703
+  },
+  "b41": {
+    "B4.0_matched": {
+      "oracle_joint_nll": 0.6475434274121229,
+      "oracle_unseen_joint": 0.004106776180698152,
+      "oracle_next_state_nll": 0.08766307647851598,
+      "oracle_observation_nll": 0.23118508354365513,
+      "oracle_next_state_brier": 0.05968359393917174,
+      "oracle_confirmation_brier": 0.05032603945869194,
+      "oracle_duration_mae": 31.86252948692521,
+      "oracle_next_state_correct": 0.9568788501026694,
+      "oracle_observation_correct": 0.864476386036961,
+      "replay_joint_nll": 1.1078710482436969,
+      "replay_unseen_joint": 0.004106776180698152,
+      "replay_next_state_nll": 0.5231705057686119,
+      "replay_observation_nll": 0.4103057652753989,
+      "replay_next_state_brier": 0.3020015029531491,
+      "replay_confirmation_brier": 0.06211197054587165,
+      "replay_duration_mae": 33.08570265878544,
+      "replay_next_state_correct": 0.7987679671457906,
+      "replay_observation_correct": 0.813141683778234,
+      "oracle_unseen_joint_count": 2,
+      "replay_unseen_joint_count": 2,
+      "replay_unseen_observation_updates": 0,
+      "oracle_episode_mean_joint_nll": 0.9838328594648137,
+      "replay_episode_mean_joint_nll": 1.445907688089003
+    },
+    "B4.1a_time": {
+      "oracle_joint_nll": 0.6070890406434906,
+      "oracle_unseen_joint": 0.004106776180698152,
+      "oracle_next_state_nll": 0.047517515021089266,
+      "oracle_observation_nll": 0.21260400662061366,
+      "oracle_next_state_brier": 0.026763964490834635,
+      "oracle_confirmation_brier": 0.044333281189471566,
+      "oracle_duration_mae": 31.642839192793584,
+      "oracle_next_state_correct": 0.9917864476386037,
+      "oracle_observation_correct": 0.8973305954825462,
+      "replay_joint_nll": 1.0790363063431097,
+      "replay_unseen_joint": 0.004106776180698152,
+      "replay_next_state_nll": 0.4957392958231681,
+      "replay_observation_nll": 0.39268429377222197,
+      "replay_next_state_brier": 0.28272093663523523,
+      "replay_confirmation_brier": 0.058641854115324084,
+      "replay_duration_mae": 32.578254345370915,
+      "replay_next_state_correct": 0.8172484599589322,
+      "replay_observation_correct": 0.8316221765913757,
+      "oracle_unseen_joint_count": 2,
+      "replay_unseen_joint_count": 2,
+      "replay_unseen_observation_updates": 0,
+      "oracle_episode_mean_joint_nll": 0.9426760685983835,
+      "replay_episode_mean_joint_nll": 1.417890433959216
+    },
+    "B4.1b_time_history": {
+      "oracle_joint_nll": 0.6020828548091298,
+      "oracle_unseen_joint": 0.004106776180698152,
+      "oracle_next_state_nll": 0.03487887545810249,
+      "oracle_observation_nll": 0.20535395022420178,
+      "oracle_next_state_brier": 0.017571621941242243,
+      "oracle_confirmation_brier": 0.041634612389388495,
+      "oracle_duration_mae": 31.471169601424553,
+      "oracle_next_state_correct": 0.9917864476386037,
+      "oracle_observation_correct": 0.8993839835728953,
+      "replay_joint_nll": 1.0739860715634817,
+      "replay_unseen_joint": 0.004106776180698152,
+      "replay_next_state_nll": 0.4858709310978002,
+      "replay_observation_nll": 0.38608683825471213,
+      "replay_next_state_brier": 0.2777124914173689,
+      "replay_confirmation_brier": 0.05697179125655734,
+      "replay_duration_mae": 32.357460431815774,
+      "replay_next_state_correct": 0.8172484599589322,
+      "replay_observation_correct": 0.8336755646817249,
+      "oracle_unseen_joint_count": 2,
+      "replay_unseen_joint_count": 2,
+      "replay_unseen_observation_updates": 0,
+      "oracle_episode_mean_joint_nll": 0.9344957863756798,
+      "replay_episode_mean_joint_nll": 1.4123093047613464
+    }
+  },
+  "b2": {
+    "B1.1_argmax": {
+      "accuracy": 0.5933333333333334,
+      "balanced_accuracy": 0.7844444444444445,
+      "macro_f1": 0.6389761032618176,
+      "log_loss": 1.1925059339582194,
+      "multiclass_brier": 0.5504950695825005,
+      "nominal_false_alarm_rate": 0.6933333333333334,
+      "fault_detection_recall": 1.0
+    },
+    "B1.1_threshold": {
+      "accuracy": 0.68,
+      "balanced_accuracy": 0.7777777777777777,
+      "macro_f1": 0.7044767155314823,
+      "log_loss": 1.1925059339582194,
+      "multiclass_brier": 0.5504950695825005,
+      "nominal_false_alarm_rate": 0.4666666666666667,
+      "fault_detection_recall": 0.9466666666666667
+    },
+    "B2_argmax": {
+      "accuracy": 0.8466666666666667,
+      "balanced_accuracy": 0.8866666666666667,
+      "macro_f1": 0.8325950461595765,
+      "log_loss": 0.8921383990074306,
+      "multiclass_brier": 0.3868123836079451,
+      "nominal_false_alarm_rate": 0.21333333333333335,
+      "fault_detection_recall": 1.0
+    },
+    "B2_threshold": {
+      "accuracy": 0.9066666666666666,
+      "balanced_accuracy": 0.8711111111111111,
+      "macro_f1": 0.8756935516041476,
+      "log_loss": 0.8921383990074306,
+      "multiclass_brier": 0.3868123836079451,
+      "nominal_false_alarm_rate": 0.04,
+      "fault_detection_recall": 0.9466666666666667
+    }
+  },
+  "b2_classes": [
+    "cpu",
+    "delay",
+    "disk",
+    "loss",
+    "mem",
+    "normal"
+  ],
+  "b2_reconstructed_training_only": true,
+  "holdout_counts": {
+    "b3": 204,
+    "b41": 487,
+    "b2": 150
+  },
+  "hashes": {
+    "bayesian\\outputs\\b3\\bayesian_b3.joblib": "348174d885c1cf679687eff034c6942394651eef30f7b6466d2a0446ec18d3d8",
+    "bayesian\\outputs\\b41\\kernel_tables.json": "c71c371befcbfff09c751d8bdee65382b028cb594475f38006f517306367a3ad",
+    "bayesian\\outputs\\b3\\recovery_validated.csv": "2876545d2b056a32f2b02c5347375ba3954ed30747499162a548d6051c1471d7",
+    "bayesian\\outputs\\b3\\episode_splits.csv": "e34426aca80a7d3189e2f7c47304cabb608d59f50b68b8a642ad58c43afc2569",
+    "bayesian\\outputs\\b41\\episode_splits.csv": "353a256261bd6efa1b615e22fc97201b94b09b876fc4a15957f66d4054bd64f2",
+    "data\\recovery_multistep_v2.csv": "ad43aa90f52dc8976675400016b3c6ec1a043a2ff922a6c96f7596d36d9798f4",
+    "data\\recovery_multistep_v2_episodes.csv": "8a9d055dfb13cde0915541b1c3e6a93c3181bc94357f9cce1f07b998df67ce8a",
+    "bayesian\\outputs\\rcaeval_features.csv": "b46f0b3926583656dc1037b02713e9728176323e44f38789c0d9fff1fccc2ce6"
+  },
+  "limitations": [
+    "Reserved records have previously been included in descriptive data audits; not fully blinded.",
+    "B2 supporting fault model is not part of live recovery.",
+    "B4.1 uses recorded actions for replay; not counterfactual policy evaluation."
+  ]
+}

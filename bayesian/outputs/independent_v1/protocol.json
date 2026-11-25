@@ -1,0 +1,88 @@
+{
+  "seed": 81442,
+  "n": 504,
+  "model_sha256": {
+    "b3": "348174d885c1cf679687eff034c6942394651eef30f7b6466d2a0446ec18d3d8",
+    "kernel": "c71c371befcbfff09c751d8bdee65382b028cb594475f38006f517306367a3ad"
+  },
+  "code_sha256": {
+    "ballerina_service/extended_service.bal": "2945f18bb9915537e013edf337f8f57b78f02c1b7844a674d4e11db0ee6689ee",
+    "sure/independent_recovery.py": "f839600572cbefdca6788332a6718b7604b45f5ee1ec4b7b3cad70b4068beeb7",
+    "sure/policy.py": "1ca987209b6422520a78ccfb91025da022451bd11bdd928753b72f8319711fd8",
+    "sure/experiment.py": "2b458bd70da42910d69405804bf92915b55dffada2770f71e2a6efc4b145318d",
+    "bayesian/evaluate_bayesian_planner.py": "361d65d27b2b24f7553545eced7e57b3e826bed143abee3426757affa8f8ffa1",
+    "bayesian/evaluate_time_aware_planner.py": "4205bf369fb7e66a86a164f7eaa2e84896e304061f35b596f2657ed20b017232",
+    "bayesian/evaluate_planner_sensitivity.py": "2932b2ef55bc221091edddd66aa5aec95c9994294862e1418bb844996f587784",
+    "bayesian/independent_evaluation.py": "aa2dfea2da777bb561898c13011a69f271c731464c1f53732ac0213486b0d5df",
+    "bayesian/score_frozen_holdouts.py": "a8f220e351a7fba6038f3576f21739108e90f74a22154b3b6aec769d82607a82",
+    "bayesian/train_execution_bayes.py": "c93fb49d517240823c36925d44f288df30897d6a331e0187b5872ab8e9400533",
+    "bayesian/train_time_aware_kernel.py": "f619e28b827dda6df3a835f04f72853017d3feeaf804c2c0cb344d5c0a44820e",
+    "bayesian/temporal_bayesian.py": "f32bd4c1cf87b9271227be511b3fd1bb8d3a0055c6ec303ea9845ccaf5900da8"
+  },
+  "holdout_input_sha256": {
+    "bayesian/outputs/b3/recovery_validated.csv": "2876545d2b056a32f2b02c5347375ba3954ed30747499162a548d6051c1471d7",
+    "bayesian/outputs/b3/episode_splits.csv": "e34426aca80a7d3189e2f7c47304cabb608d59f50b68b8a642ad58c43afc2569",
+    "bayesian/outputs/b3/validation_metrics.json": "26f3f7130b162e3435cc75073ade030f48a8cd44e8727d17ac27f44cf3c3cee6",
+    "bayesian/outputs/b41/episode_splits.csv": "353a256261bd6efa1b615e22fc97201b94b09b876fc4a15957f66d4054bd64f2",
+    "bayesian/outputs/b41/validation_metrics.json": "aa25a1387f87fab4012d9fdd8cb758deecb0c832a9be5df996ef628f34a3743f",
+    "data/recovery_multistep_v2.csv": "ad43aa90f52dc8976675400016b3c6ec1a043a2ff922a6c96f7596d36d9798f4",
+    "data/recovery_multistep_v2_episodes.csv": "8a9d055dfb13cde0915541b1c3e6a93c3181bc94357f9cce1f07b998df67ce8a",
+    "bayesian/outputs/rcaeval_features.csv": "b46f0b3926583656dc1037b02713e9728176323e44f38789c0d9fff1fccc2ce6",
+    "bayesian/outputs/feature_columns.json": "fbfce1bdf720ee2a7318becd6b0b77c428ca619c04052eb48bb023ee504a3ff0",
+    "bayesian/outputs/gnb_tuned_validation_metrics.json": "2101b2c76d4726dd9753947f38280df06102544392bb02b0444effde5e6bd422",
+    "bayesian/outputs/b2_validation_metrics.json": "b7cc49fc84f65b31195c03eec585523665ca432af5c7115e4240cafcf40cdf94"
+  },
+  "missing_holdout_inputs": [],
+  "design_sha256": "ba3d24f53981632da6141460cfa4c165864881419ba5bf4a738f487aa0e6dc6b",
+  "policies": {
+    "safe_retry": null,
+    "fixed_reconcile": null,
+    "retry_backoff": null,
+    "reconcile_backoff": null,
+    "failover_backoff": null,
+    "hybrid_backoff": null,
+    "v2": [
+      1,
+      0.1,
+      2
+    ],
+    "v4": [
+      2,
+      0.1,
+      2
+    ],
+    "v4_no_time": [
+      2,
+      0.1,
+      0
+    ],
+    "v4_time_only": [
+      2,
+      0.1,
+      1
+    ]
+  },
+  "max_steps": 4,
+  "wait_ms": 75,
+  "http_cap_ms": 180,
+  "admission_margin_ms": 25,
+  "call_cost": 0.025,
+  "time_cost": 0.1,
+  "primary_comparator": "failover_backoff",
+  "primary_endpoint": "confirmed_on_time",
+  "primary_latency_subset": "both policies confirmed on time AND both initially unconfirmed",
+  "resampling": "paired stratified case bootstrap (family/keyed), 10000 draws; descriptive intervals",
+  "secondary": [
+    "v4 vs v2",
+    "v4 vs v4_no_time",
+    "v4 vs v4_time_only",
+    "per-family and budget summaries"
+  ],
+  "limitations": [
+    "504 is an exploratory fixed design size, not a powered sample size",
+    "synthetic delay and availability schedules, not actual packet loss or independent hosts",
+    "same pre-sampled endpoint ordinal schedules, not identical wall-clock timings",
+    "fixed admission caps; no hard deadline proof",
+    "conditional latency subset is descriptive"
+  ]
+}

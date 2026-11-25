@@ -1,0 +1,1640 @@
+[
+  {
+    "family": "normal",
+    "keyed": true,
+    "cap": 150,
+    "deadline": 750,
+    "budget": 3,
+    "process_ms": 41,
+    "primary": [
+      {
+        "before_ms": 8,
+        "after_ms": 5,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 7,
+        "after_ms": 11,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 11,
+        "after_ms": 10,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 9,
+        "after_ms": 11,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 6,
+        "after_ms": 7,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "backup": [
+      {
+        "before_ms": 15,
+        "after_ms": 1,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 8,
+        "after_ms": 12,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 4,
+        "after_ms": 4,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 10,
+        "after_ms": 13,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 1,
+        "after_ms": 10,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "status": [
+      {
+        "before_ms": 49,
+        "after_ms": 14,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 26,
+        "after_ms": 14,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 30,
+        "after_ms": 10,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 63,
+        "after_ms": 3,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 26,
+        "after_ms": 13,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "case": 0,
+    "order": [
+      "reconcile_backoff",
+      "v2",
+      "failover_backoff",
+      "v4_no_time",
+      "fixed_reconcile",
+      "v4",
+      "retry_backoff",
+      "v4_time_only",
+      "safe_retry",
+      "hybrid_backoff"
+    ]
+  },
+  {
+    "family": "normal",
+    "keyed": false,
+    "cap": 150,
+    "deadline": 750,
+    "budget": 3,
+    "process_ms": 31,
+    "primary": [
+      {
+        "before_ms": 1,
+        "after_ms": 2,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 1,
+        "after_ms": 15,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 4,
+        "after_ms": 6,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 3,
+        "after_ms": 10,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 0,
+        "after_ms": 9,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "backup": [
+      {
+        "before_ms": 11,
+        "after_ms": 9,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 2,
+        "after_ms": 12,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 14,
+        "after_ms": 12,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 11,
+        "after_ms": 8,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 3,
+        "after_ms": 0,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "status": [
+      {
+        "before_ms": 22,
+        "after_ms": 0,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 39,
+        "after_ms": 3,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 54,
+        "after_ms": 8,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 30,
+        "after_ms": 1,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 65,
+        "after_ms": 2,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "case": 1,
+    "order": [
+      "v4",
+      "retry_backoff",
+      "hybrid_backoff",
+      "v4_no_time",
+      "fixed_reconcile",
+      "v2",
+      "failover_backoff",
+      "v4_time_only",
+      "safe_retry",
+      "reconcile_backoff"
+    ]
+  },
+  {
+    "family": "drop",
+    "keyed": true,
+    "cap": 150,
+    "deadline": 750,
+    "budget": 3,
+    "process_ms": 56,
+    "primary": [
+      {
+        "before_ms": 9,
+        "after_ms": 413,
+        "down": false,
+        "drop": true
+      },
+      {
+        "before_ms": 3,
+        "after_ms": 1,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 2,
+        "after_ms": 1,
+        "down": false,
+        "drop": true
+      },
+      {
+        "before_ms": 8,
+        "after_ms": 9,
+        "down": false,
+        "drop": true
+      },
+      {
+        "before_ms": 0,
+        "after_ms": 0,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "backup": [
+      {
+        "before_ms": 1,
+        "after_ms": 15,
+        "down": false,
+        "drop": true
+      },
+      {
+        "before_ms": 3,
+        "after_ms": 5,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 9,
+        "after_ms": 7,
+        "down": false,
+        "drop": true
+      },
+      {
+        "before_ms": 13,
+        "after_ms": 5,
+        "down": false,
+        "drop": true
+      },
+      {
+        "before_ms": 5,
+        "after_ms": 14,
+        "down": false,
+        "drop": true
+      }
+    ],
+    "status": [
+      {
+        "before_ms": 44,
+        "after_ms": 2,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 30,
+        "after_ms": 8,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 46,
+        "after_ms": 5,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 30,
+        "after_ms": 4,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 52,
+        "after_ms": 4,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "case": 2,
+    "order": [
+      "v4_no_time",
+      "retry_backoff",
+      "hybrid_backoff",
+      "failover_backoff",
+      "safe_retry",
+      "v4",
+      "v4_time_only",
+      "fixed_reconcile",
+      "v2",
+      "reconcile_backoff"
+    ]
+  },
+  {
+    "family": "combined",
+    "keyed": true,
+    "cap": 150,
+    "deadline": 750,
+    "budget": 3,
+    "process_ms": 872,
+    "primary": [
+      {
+        "before_ms": 92,
+        "after_ms": 443,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 120,
+        "after_ms": 496,
+        "down": true,
+        "drop": false
+      },
+      {
+        "before_ms": 81,
+        "after_ms": 45,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 45,
+        "after_ms": 438,
+        "down": false,
+        "drop": true
+      },
+      {
+        "before_ms": 232,
+        "after_ms": 99,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "backup": [
+      {
+        "before_ms": 44,
+        "after_ms": 44,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 23,
+        "after_ms": 287,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 13,
+        "after_ms": 251,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 48,
+        "after_ms": 71,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 15,
+        "after_ms": 64,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "status": [
+      {
+        "before_ms": 52,
+        "after_ms": 104,
+        "down": true,
+        "drop": false
+      },
+      {
+        "before_ms": 197,
+        "after_ms": 143,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 85,
+        "after_ms": 130,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 39,
+        "after_ms": 135,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 42,
+        "after_ms": 53,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "case": 3,
+    "order": [
+      "v4_no_time",
+      "v4",
+      "safe_retry",
+      "failover_backoff",
+      "fixed_reconcile",
+      "v2",
+      "reconcile_backoff",
+      "hybrid_backoff",
+      "v4_time_only",
+      "retry_backoff"
+    ]
+  },
+  {
+    "family": "endpoint",
+    "keyed": false,
+    "cap": 150,
+    "deadline": 750,
+    "budget": 3,
+    "process_ms": 37,
+    "primary": [
+      {
+        "before_ms": 9,
+        "after_ms": 6,
+        "down": true,
+        "drop": false
+      },
+      {
+        "before_ms": 15,
+        "after_ms": 0,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 5,
+        "after_ms": 7,
+        "down": true,
+        "drop": false
+      },
+      {
+        "before_ms": 14,
+        "after_ms": 2,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 2,
+        "after_ms": 2,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "backup": [
+      {
+        "before_ms": 10,
+        "after_ms": 3,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 10,
+        "after_ms": 15,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 5,
+        "after_ms": 5,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 2,
+        "after_ms": 9,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 8,
+        "after_ms": 10,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "status": [
+      {
+        "before_ms": 46,
+        "after_ms": 19,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 55,
+        "after_ms": 20,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 34,
+        "after_ms": 5,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 55,
+        "after_ms": 10,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 38,
+        "after_ms": 17,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "case": 4,
+    "order": [
+      "safe_retry",
+      "v4_no_time",
+      "reconcile_backoff",
+      "hybrid_backoff",
+      "fixed_reconcile",
+      "v2",
+      "failover_backoff",
+      "v4_time_only",
+      "v4",
+      "retry_backoff"
+    ]
+  },
+  {
+    "family": "slow",
+    "keyed": false,
+    "cap": 150,
+    "deadline": 750,
+    "budget": 3,
+    "process_ms": 867,
+    "primary": [
+      {
+        "before_ms": 1,
+        "after_ms": 14,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 10,
+        "after_ms": 6,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 3,
+        "after_ms": 9,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 8,
+        "after_ms": 10,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 4,
+        "after_ms": 5,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "backup": [
+      {
+        "before_ms": 14,
+        "after_ms": 8,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 14,
+        "after_ms": 2,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 7,
+        "after_ms": 0,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 4,
+        "after_ms": 3,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 15,
+        "after_ms": 1,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "status": [
+      {
+        "before_ms": 53,
+        "after_ms": 14,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 61,
+        "after_ms": 15,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 43,
+        "after_ms": 15,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 27,
+        "after_ms": 5,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 18,
+        "after_ms": 5,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "case": 5,
+    "order": [
+      "retry_backoff",
+      "fixed_reconcile",
+      "safe_retry",
+      "hybrid_backoff",
+      "v4_no_time",
+      "reconcile_backoff",
+      "v2",
+      "failover_backoff",
+      "v4_time_only",
+      "v4"
+    ]
+  },
+  {
+    "family": "combined",
+    "keyed": false,
+    "cap": 150,
+    "deadline": 750,
+    "budget": 3,
+    "process_ms": 210,
+    "primary": [
+      {
+        "before_ms": 65,
+        "after_ms": 98,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 167,
+        "after_ms": 426,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 140,
+        "after_ms": 187,
+        "down": false,
+        "drop": true
+      },
+      {
+        "before_ms": 213,
+        "after_ms": 425,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 188,
+        "after_ms": 145,
+        "down": true,
+        "drop": false
+      }
+    ],
+    "backup": [
+      {
+        "before_ms": 136,
+        "after_ms": 88,
+        "down": true,
+        "drop": false
+      },
+      {
+        "before_ms": 48,
+        "after_ms": 63,
+        "down": false,
+        "drop": true
+      },
+      {
+        "before_ms": 41,
+        "after_ms": 189,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 52,
+        "after_ms": 299,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 155,
+        "after_ms": 1,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "status": [
+      {
+        "before_ms": 178,
+        "after_ms": 234,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 183,
+        "after_ms": 68,
+        "down": true,
+        "drop": false
+      },
+      {
+        "before_ms": 112,
+        "after_ms": 83,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 53,
+        "after_ms": 24,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 156,
+        "after_ms": 11,
+        "down": true,
+        "drop": false
+      }
+    ],
+    "case": 6,
+    "order": [
+      "hybrid_backoff",
+      "v2",
+      "fixed_reconcile",
+      "v4",
+      "v4_time_only",
+      "reconcile_backoff",
+      "retry_backoff",
+      "failover_backoff",
+      "v4_no_time",
+      "safe_retry"
+    ]
+  },
+  {
+    "family": "status",
+    "keyed": true,
+    "cap": 150,
+    "deadline": 750,
+    "budget": 3,
+    "process_ms": 57,
+    "primary": [
+      {
+        "before_ms": 0,
+        "after_ms": 426,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 7,
+        "after_ms": 13,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 4,
+        "after_ms": 5,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 15,
+        "after_ms": 5,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 11,
+        "after_ms": 10,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "backup": [
+      {
+        "before_ms": 7,
+        "after_ms": 14,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 6,
+        "after_ms": 6,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 14,
+        "after_ms": 15,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 6,
+        "after_ms": 3,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 1,
+        "after_ms": 10,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "status": [
+      {
+        "before_ms": 50,
+        "after_ms": 120,
+        "down": true,
+        "drop": false
+      },
+      {
+        "before_ms": 90,
+        "after_ms": 175,
+        "down": true,
+        "drop": false
+      },
+      {
+        "before_ms": 16,
+        "after_ms": 88,
+        "down": true,
+        "drop": false
+      },
+      {
+        "before_ms": 23,
+        "after_ms": 195,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 37,
+        "after_ms": 137,
+        "down": true,
+        "drop": false
+      }
+    ],
+    "case": 7,
+    "order": [
+      "reconcile_backoff",
+      "retry_backoff",
+      "v4_time_only",
+      "v2",
+      "fixed_reconcile",
+      "hybrid_backoff",
+      "v4_no_time",
+      "safe_retry",
+      "v4",
+      "failover_backoff"
+    ]
+  },
+  {
+    "family": "response_delay",
+    "keyed": true,
+    "cap": 150,
+    "deadline": 750,
+    "budget": 3,
+    "process_ms": 31,
+    "primary": [
+      {
+        "before_ms": 11,
+        "after_ms": 296,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 5,
+        "after_ms": 52,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 7,
+        "after_ms": 28,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 10,
+        "after_ms": 156,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 10,
+        "after_ms": 129,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "backup": [
+      {
+        "before_ms": 13,
+        "after_ms": 60,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 5,
+        "after_ms": 102,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 2,
+        "after_ms": 31,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 10,
+        "after_ms": 132,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 13,
+        "after_ms": 160,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "status": [
+      {
+        "before_ms": 65,
+        "after_ms": 15,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 44,
+        "after_ms": 14,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 59,
+        "after_ms": 18,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 25,
+        "after_ms": 0,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 49,
+        "after_ms": 6,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "case": 8,
+    "order": [
+      "hybrid_backoff",
+      "v2",
+      "reconcile_backoff",
+      "failover_backoff",
+      "v4",
+      "fixed_reconcile",
+      "v4_no_time",
+      "safe_retry",
+      "retry_backoff",
+      "v4_time_only"
+    ]
+  },
+  {
+    "family": "status",
+    "keyed": false,
+    "cap": 150,
+    "deadline": 750,
+    "budget": 3,
+    "process_ms": 30,
+    "primary": [
+      {
+        "before_ms": 11,
+        "after_ms": 423,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 9,
+        "after_ms": 2,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 12,
+        "after_ms": 8,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 12,
+        "after_ms": 12,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 12,
+        "after_ms": 0,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "backup": [
+      {
+        "before_ms": 14,
+        "after_ms": 6,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 15,
+        "after_ms": 2,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 10,
+        "after_ms": 10,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 11,
+        "after_ms": 15,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 14,
+        "after_ms": 9,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "status": [
+      {
+        "before_ms": 125,
+        "after_ms": 34,
+        "down": true,
+        "drop": false
+      },
+      {
+        "before_ms": 103,
+        "after_ms": 98,
+        "down": true,
+        "drop": false
+      },
+      {
+        "before_ms": 37,
+        "after_ms": 181,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 101,
+        "after_ms": 92,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 108,
+        "after_ms": 37,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "case": 9,
+    "order": [
+      "v4",
+      "failover_backoff",
+      "reconcile_backoff",
+      "fixed_reconcile",
+      "hybrid_backoff",
+      "v2",
+      "v4_no_time",
+      "v4_time_only",
+      "safe_retry",
+      "retry_backoff"
+    ]
+  },
+  {
+    "family": "response_delay",
+    "keyed": false,
+    "cap": 150,
+    "deadline": 750,
+    "budget": 3,
+    "process_ms": 44,
+    "primary": [
+      {
+        "before_ms": 1,
+        "after_ms": 368,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 12,
+        "after_ms": 63,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 2,
+        "after_ms": 85,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 6,
+        "after_ms": 8,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 11,
+        "after_ms": 35,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "backup": [
+      {
+        "before_ms": 3,
+        "after_ms": 150,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 0,
+        "after_ms": 32,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 4,
+        "after_ms": 67,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 6,
+        "after_ms": 143,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 5,
+        "after_ms": 90,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "status": [
+      {
+        "before_ms": 35,
+        "after_ms": 12,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 41,
+        "after_ms": 0,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 53,
+        "after_ms": 1,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 32,
+        "after_ms": 18,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 32,
+        "after_ms": 19,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "case": 10,
+    "order": [
+      "safe_retry",
+      "hybrid_backoff",
+      "v4",
+      "v4_no_time",
+      "v2",
+      "failover_backoff",
+      "reconcile_backoff",
+      "fixed_reconcile",
+      "v4_time_only",
+      "retry_backoff"
+    ]
+  },
+  {
+    "family": "slow",
+    "keyed": true,
+    "cap": 150,
+    "deadline": 750,
+    "budget": 3,
+    "process_ms": 367,
+    "primary": [
+      {
+        "before_ms": 1,
+        "after_ms": 0,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 4,
+        "after_ms": 15,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 14,
+        "after_ms": 5,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 9,
+        "after_ms": 3,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 11,
+        "after_ms": 7,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "backup": [
+      {
+        "before_ms": 8,
+        "after_ms": 0,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 10,
+        "after_ms": 3,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 3,
+        "after_ms": 14,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 13,
+        "after_ms": 1,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 1,
+        "after_ms": 7,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "status": [
+      {
+        "before_ms": 40,
+        "after_ms": 0,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 57,
+        "after_ms": 17,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 65,
+        "after_ms": 16,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 60,
+        "after_ms": 1,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 36,
+        "after_ms": 12,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "case": 11,
+    "order": [
+      "hybrid_backoff",
+      "v4_no_time",
+      "failover_backoff",
+      "v2",
+      "safe_retry",
+      "v4",
+      "fixed_reconcile",
+      "retry_backoff",
+      "reconcile_backoff",
+      "v4_time_only"
+    ]
+  },
+  {
+    "family": "endpoint",
+    "keyed": true,
+    "cap": 150,
+    "deadline": 750,
+    "budget": 3,
+    "process_ms": 20,
+    "primary": [
+      {
+        "before_ms": 14,
+        "after_ms": 5,
+        "down": true,
+        "drop": false
+      },
+      {
+        "before_ms": 12,
+        "after_ms": 0,
+        "down": true,
+        "drop": false
+      },
+      {
+        "before_ms": 0,
+        "after_ms": 14,
+        "down": true,
+        "drop": false
+      },
+      {
+        "before_ms": 1,
+        "after_ms": 5,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 1,
+        "after_ms": 5,
+        "down": true,
+        "drop": false
+      }
+    ],
+    "backup": [
+      {
+        "before_ms": 6,
+        "after_ms": 13,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 5,
+        "after_ms": 11,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 3,
+        "after_ms": 11,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 4,
+        "after_ms": 9,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 1,
+        "after_ms": 2,
+        "down": true,
+        "drop": false
+      }
+    ],
+    "status": [
+      {
+        "before_ms": 46,
+        "after_ms": 10,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 46,
+        "after_ms": 11,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 27,
+        "after_ms": 1,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 15,
+        "after_ms": 14,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 65,
+        "after_ms": 17,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "case": 12,
+    "order": [
+      "retry_backoff",
+      "fixed_reconcile",
+      "safe_retry",
+      "hybrid_backoff",
+      "v4_time_only",
+      "v4",
+      "failover_backoff",
+      "reconcile_backoff",
+      "v2",
+      "v4_no_time"
+    ]
+  },
+  {
+    "family": "drop",
+    "keyed": false,
+    "cap": 150,
+    "deadline": 750,
+    "budget": 3,
+    "process_ms": 34,
+    "primary": [
+      {
+        "before_ms": 10,
+        "after_ms": 337,
+        "down": false,
+        "drop": true
+      },
+      {
+        "before_ms": 8,
+        "after_ms": 2,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 3,
+        "after_ms": 8,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 1,
+        "after_ms": 15,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 1,
+        "after_ms": 3,
+        "down": false,
+        "drop": true
+      }
+    ],
+    "backup": [
+      {
+        "before_ms": 12,
+        "after_ms": 11,
+        "down": false,
+        "drop": true
+      },
+      {
+        "before_ms": 15,
+        "after_ms": 15,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 2,
+        "after_ms": 13,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 10,
+        "after_ms": 11,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 9,
+        "after_ms": 14,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "status": [
+      {
+        "before_ms": 46,
+        "after_ms": 20,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 37,
+        "after_ms": 18,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 43,
+        "after_ms": 6,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 37,
+        "after_ms": 17,
+        "down": false,
+        "drop": false
+      },
+      {
+        "before_ms": 59,
+        "after_ms": 7,
+        "down": false,
+        "drop": false
+      }
+    ],
+    "case": 13,
+    "order": [
+      "fixed_reconcile",
+      "v4_time_only",
+      "retry_backoff",
+      "v2",
+      "failover_backoff",
+      "v4",
+      "reconcile_backoff",
+      "hybrid_backoff",
+      "v4_no_time",
+      "safe_retry"
+    ]
+  }
+]
